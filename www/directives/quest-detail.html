@@ -1,0 +1,15 @@
+<article class="quest">
+	<h2>{{quest.name}}</h2>
+	<section class="description">{{quest.description}}</section>
+	<section class="metadata">
+		<dl>
+			<dt ng-if="quest.deadline">Deadline:</dt>
+			<dd ng-if="quest.deadline">{{quest.deadline}}</dd>
+		</dl>
+	</section>
+	<section class="journal">
+		<div ng-repeat="entry in quest.journal">
+			<journal-entry entry="entry"/>
+		</div>
+	</section>
+</article>

@@ -1,0 +1,30 @@
+/** MASTER-SLAVE TEMPLATE **/
+.master-slave .frame {
+	border: 2px solid black;
+}
+
+.master-slave .left .toolbar button {
+	width: 100%;
+}
+
+.master-slave .left a {
+	display: block;
+	width: 100%;
+}
+
+.content {
+	padding: 15px;
+}
+/** END: MASTER-SLAVE TEMPLATE **/
+
+/** EDIT TEMPLATE **/
+.edit.quest form .row {
+	margin: 1em 0;
+}
+
+.edit.quest form .row.right {
+   -webkit-justify-content: flex-end;
+   justify-content: flex-end;
+}
+
+/** END: EDIT TEMPLATE **/

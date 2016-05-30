@@ -1,0 +1,23 @@
+{
+  "name": "pouch-db-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mizhal/taller-pouchdb.git"
+  },
+  "author": "Miguel Pérez Barrero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mizhal/taller-pouchdb/issues"
+  },
+  "homepage": "https://github.com/mizhal/taller-pouchdb#readme",
+  "description": "",
+  "dependencies": {
+    "connect": "^3.4.1",
+    "serve-static": "^1.10.2"
+  }
+}

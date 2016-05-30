@@ -1,0 +1,15 @@
+<div class="edit quest content">
+	<form ng-submit="save($event)">
+		<div class="row">
+			<label class="col-20">Nombre:</label>
+			<input class="col-80" type="text" ng-model="quest.name" />
+		</div>
+		<div class="row">
+			<label class="col-20">Descripción:</label>
+			<textarea class="col-80" ng-model="quest.description" rows="10"></textarea>
+		</div>
+		<div class="row right">
+			<input type="submit" value="Guardar"/>
+		</div>
+	</form>
+</div>

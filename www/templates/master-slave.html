@@ -1,0 +1,17 @@
+<div class="master-slave">
+	<div class="row">
+		<div class="left col-20">
+			<div class="frame">
+				<div class="toolbar">
+					<button ng-click="create()">Crear</button>
+				</div>
+				<ui-view name="list"></ui-view>
+			</div>
+		</div>
+		<div class="right col-80">
+			<div class="frame">
+				<ui-view name="detail"></ui-view>
+			</div>
+		</div>
+	</div>
+</div>

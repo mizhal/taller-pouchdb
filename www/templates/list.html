@@ -1,0 +1,7 @@
+<div class="master-list">
+	<ng-repeat ng-repeat="quest in quests">
+		<a ui-sref="app.quest({id: quest._id})" 
+			ng-class="(selected == quest._id) ? 'selected': ''"
+		>{{quest.name}}</a>
+	</ng-repeat>
+</div>
