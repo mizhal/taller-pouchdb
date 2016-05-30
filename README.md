@@ -1,7 +1,7 @@
 # Description
 
-Little angular SPA intended to try some of the features of PouchDB with a restricted set of features.
-The features I want to try are:
+Little angular SPA intended to try some of the library-features of PouchDB within a restricted set of application-features.
+The application-features I want to try are:
 * Data modelling approaches with a document oriented database for some special problem.
 * Join of dependent data models through views of Couch/PouchDB.
 * Indices through design documents: sorting and filtering by multiple criteria (sort of).
