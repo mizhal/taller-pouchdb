@@ -52,7 +52,10 @@ angular.module("workshop.PouchDBTest.controllers", [])
 	function($scope, $rootScope, DBService, QuestFactory, $stateParams, $state){
 		// prep params
 		if($stateParams.id){
-			$scope.quest = DBService.get($stateParams.id);
+			DBService.get($stateParams.id).then(function(doc){
+				$scope.quest = doc;
+				$scope.$apply();
+			});
 		} else {
 			$scope.quest = QuestFactory._new();
 		}
@@ -77,16 +80,39 @@ angular.module("workshop.PouchDBTest.controllers", [])
 .controller("workshop.PouchDBTest.controllers.DetailController", 
 [
 	"$scope",
+	"$rootScope",
 	"workshop.PouchDBTest.services.DBService",
+	"$state",
 	"$stateParams",
-	function($scope, DBService, $stateParams){
+	function($scope, $rootScope, DBService, $state, $stateParams){
 
 		// init 
-		DBService.get($stateParams.id).then(function(doc){
-			$scope.quest = doc;
-			$scope.$apply();
-		});
+		if($stateParams.id) {
+			DBService.get($stateParams.id)
+				.then(function(doc){
+					$scope.quest = doc;
+					$scope.$apply();
+				})
+				.catch(function(error){
+					console.log(error);
+					$state.go("app.quests");
+				});
+		}
 		// END: init
+
+		// methods
+		$scope.edit = function() {
+			$state.go("app.quest-edit", {id: $scope.quest._id});
+		};
+
+		$scope.delete = function() {
+			DBService.destroy($scope.quest)
+				.then(function(){
+					$rootScope.$broadcast("update-quests");
+					$state.go("app.quests");		
+				});
+		}
+		// END: methods
 		
 	}
 ])

@@ -14,6 +14,10 @@ angular.module("workshop.PouchDBTest.services", [])
 		this.get = function(_id){
 			return self.Pouch.get(_id);
 		};
+
+		this.destroy = function(object){
+			return self.Pouch.remove(object);
+		};
 	}
 ])
 

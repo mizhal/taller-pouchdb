@@ -22,7 +22,7 @@
 	margin: 1em 0;
 }
 
-.edit.quest form .row.right {
+.row.right {
    -webkit-justify-content: flex-end;
    justify-content: flex-end;
 }

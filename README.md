@@ -11,7 +11,7 @@ The application-features I want to try are:
 # Task planning
 
 * [DONE] Simple master-detail view with Create and Show
-* [TODO] Add Edit and Delete.
+* [DONE] Add Edit and Delete.
 * [TODO] Write a journal inside the quest.
 * [TODO] Show all journal entries by date despite of which quest contains them.
 * [TODO] Sync with CouchDB server back and forth.
