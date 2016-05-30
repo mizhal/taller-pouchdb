@@ -41,7 +41,6 @@ var app = angular.module("workshop.PouchDBTest", [
 
 	.state("app.quest", {
 		url: "/quest/{id}",
-		controller: "workshop.PouchDBTest.controllers.DetailController",
 		views: {
 			"list": {
 				templateUrl: "templates/list.html",
@@ -58,7 +57,6 @@ var app = angular.module("workshop.PouchDBTest", [
 
 	.state("app.quest-edit", {
 		url: "/quest/edit/{id}",
-		controller: "workshop.PouchDBTest.controllers.EditController",
 		views: {
 			"list": {
 				templateUrl: "templates/list.html",
