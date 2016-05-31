@@ -8,6 +8,8 @@ angular.module("workshop.PouchDBTest.directives", [])
         function($scope, DBService){
 
             $scope.edit = function(){
+                if ($scope.writeLock.writing) 
+                    return;
                 $scope.entry.editing = true;
                 $scope.writeLock.writing = true;
             }

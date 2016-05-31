@@ -2,7 +2,8 @@ angular.module("workshop.PouchDBTest.services", [])
 
 .service("workshop.PouchDBTest.services.DBService", 
 [
-	function(){
+	"$q",
+	function($q){
 		var self = this;
 		this.Pouch = new PouchDB("test"); // size limits ignored as of now for sanity sake
 
@@ -75,10 +76,6 @@ angular.module("workshop.PouchDBTest.services", [])
 			proto.journal = [];
 			// END: fields
 
-			// orm conf
-
-			// END: orm conf
-
 			return proto;
 		}
 	}
@@ -96,6 +93,45 @@ angular.module("workshop.PouchDBTest.services", [])
 
 			return proto;
 		}
+	}
+])
+
+// If I want to avoid to rely in meta-witchcraft to make
+// DB service take into account dependent object models like
+// Rails ActiveRecord, I should use another layer, a service
+// layer, to process data objects before sending them to the 
+// database.
+// I think this could be verbose sometimes but keeps things simple
+// and keeps reflection-witchcraft at bay.
+.service("workshop.PouchDBTest.services.QuestService",
+[
+	"workshop.PouchDBTest.services.DBService",
+	"workshop.PouchDBTest.services.QuestFactory",
+	"workshop.PouchDBTest.services.JournalEntryFactory",
+	function(DBService, QuestFactory, JournalEntryFactory){
+
+		this.get = function(_id){
+			return DBService.get(_id);
+		}
+
+		this.getWithJournalEntries = function(_id, how_many_entries){
+
+		}
+
+		this.save = function(quest){
+			return DBService.save(quest);
+		}
+
+		this.destroy = function(quest){
+			return DBService.destroy(quest)
+				// :dependent => :destroy
+				.then(function(doc){
+					for(var i in quest.journal){
+						DBService.destroy(quest.journal[i].data);
+					}
+				});
+		}
+
 	}
 ])
 

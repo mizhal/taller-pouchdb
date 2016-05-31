@@ -81,14 +81,14 @@ angular.module("workshop.PouchDBTest.controllers", [])
 [
 	"$scope",
 	"$rootScope",
-	"workshop.PouchDBTest.services.DBService",
+	"workshop.PouchDBTest.services.QuestService",
 	"$state",
 	"$stateParams",
-	function($scope, $rootScope, DBService, $state, $stateParams){
+	function($scope, $rootScope, QuestService, $state, $stateParams){
 
 		// init 
 		if($stateParams.id) {
-			DBService.get($stateParams.id)
+			QuestService.get($stateParams.id)
 				.then(function(doc){
 					$scope.quest = doc;
 					$scope.$apply();
@@ -106,7 +106,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 		};
 
 		$scope.delete = function() {
-			DBService.destroy($scope.quest)
+			QuestService.destroy($scope.quest)
 				.then(function(){
 					$rootScope.$broadcast("update-quests");
 					$state.go("app.quests");		
