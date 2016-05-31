@@ -114,6 +114,16 @@ angular.module("workshop.PouchDBTest.services", [])
 			return DBService.get(_id);
 		}
 
+		this.all = function(offset, limit){
+			return DBService.Pouch.allDocs(
+				{
+					include_docs: true,
+		            startkey: "Quest#",
+		            endkey: "Quest#\uffff"
+				}
+			);
+		}
+
 		this.getWithJournalEntries = function(_id, how_many_entries){
 
 		}

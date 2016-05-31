@@ -5,8 +5,8 @@ angular.module("workshop.PouchDBTest.controllers", [])
 	"$scope",
 	"$rootScope",
 	"$state",
-	"workshop.PouchDBTest.services.DBService",
-	function($rootScope, $scope, $state, DBService){
+	"workshop.PouchDBTest.services.QuestService",
+	function($rootScope, $scope, $state, QuestService){
 
 		// methods
 		$scope.create = function(){
@@ -14,13 +14,8 @@ angular.module("workshop.PouchDBTest.controllers", [])
 		};
 
 		$scope.updateQuests = function(){
-			DBService.Pouch.allDocs(
-				{
-					include_docs: true,
-		            startkey: "Quest#",
-		            endkey: "Quest#\uffff"
-				}
-			).then(function(response){
+			QuestService.all()
+			.then(function(response){
 				$scope.quests = [];
 				response.rows.map(function(row){
 					$scope.quests.push(row.doc);
@@ -45,11 +40,11 @@ angular.module("workshop.PouchDBTest.controllers", [])
 [
 	"$scope",
 	"$rootScope",
-	"workshop.PouchDBTest.services.DBService",
+	"workshop.PouchDBTest.services.QuestService",
 	"workshop.PouchDBTest.services.QuestFactory",
 	"$stateParams",
 	"$state",
-	function($scope, $rootScope, DBService, QuestFactory, $stateParams, $state){
+	function($scope, $rootScope, QuestService, QuestFactory, $stateParams, $state){
 		// prep params
 		if($stateParams.id){
 			DBService.get($stateParams.id).then(function(doc){
@@ -64,7 +59,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 		// methods
 		$scope.save = function(event){
 			event.preventDefault();
-			DBService.save($scope.quest)
+			QuestService.save($scope.quest)
 				.then(function(doc){
 					$rootScope.$broadcast("update-quests");
 					$state.go("app.quest", {id: doc.id});
