@@ -47,7 +47,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 	function($scope, $rootScope, QuestService, QuestFactory, $stateParams, $state){
 		// prep params
 		if($stateParams.id){
-			DBService.get($stateParams.id).then(function(doc){
+			QuestService.get($stateParams.id).then(function(doc){
 				$scope.quest = doc;
 				$scope.$apply();
 			});
