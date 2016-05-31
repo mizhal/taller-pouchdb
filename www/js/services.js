@@ -8,7 +8,11 @@ angular.module("workshop.PouchDBTest.services", [])
 
 		this.save = function(object) {
 			object.updated_at = new Date();
-			return self.Pouch.put(object);
+			return self.Pouch.put(object)
+				.then(function(docsum){
+					object._rev = docsum.rev;
+					return docsum;
+				});
 		};
 
 		this.get = function(_id){
@@ -72,7 +76,7 @@ angular.module("workshop.PouchDBTest.services", [])
 			// END: fields
 
 			// orm conf
-			
+
 			// END: orm conf
 
 			return proto;

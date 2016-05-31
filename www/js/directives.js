@@ -15,7 +15,6 @@ angular.module("workshop.PouchDBTest.directives", [])
             $scope.save = function(){
                 DBService.save($scope.entry.data)
                     .then(function(doc){
-                        $scope.entry.data._rev = doc.rev;
                         $scope.entry.editing = false;
                         $scope.writeLock.writing = false;
                         $scope.$apply();
