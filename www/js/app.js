@@ -2,6 +2,7 @@ var app = angular.module("workshop.PouchDBTest", [
 
 	// libs
 	"ui.router",
+	"ngSanitize",
 	// END: libs
 
 	// app

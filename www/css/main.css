@@ -28,3 +28,9 @@
 }
 
 /** END: EDIT TEMPLATE **/
+
+/** JOURNAL EMBEDDED ENTRIES **/
+article.journal-entry textarea {
+	width: 100%;
+}
+/** END: JOURNAL EMBEDDED ENTRIES **/

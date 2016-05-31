@@ -8,6 +8,11 @@
 		</dl>
 	</section>
 	<section class="journal">
+		<div class="toolbar">
+			<button ng-if="!writing" ng-click="writeJournal()">Escribir</button>
+			<button ng-if="writing" ng-click="saveJournal()">Guardar</button>
+		</div>
+		<journal-entry-writing ng-if="writing" entry="writing"/>
 		<div ng-repeat="entry in quest.journal">
 			<journal-entry entry="entry"/>
 		</div>
