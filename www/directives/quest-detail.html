@@ -9,12 +9,10 @@
 	</section>
 	<section class="journal">
 		<div class="toolbar">
-			<button ng-if="!writing" ng-click="writeJournal()">Escribir</button>
-			<button ng-if="writing" ng-click="saveJournal()">Guardar</button>
+			<button ng-if="!writeLock.writing" ng-click="writeJournal()">Escribir</button>
 		</div>
-		<journal-entry-writing ng-if="writing" entry="writing"/>
 		<div ng-repeat="entry in quest.journal">
-			<journal-entry entry="entry"/>
+			<journal-entry entry="entry" write-lock="writeLock"/>
 		</div>
 	</section>
 </article>

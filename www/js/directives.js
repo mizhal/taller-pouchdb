@@ -1,24 +1,40 @@
 angular.module("workshop.PouchDBTest.directives", [])
 
 .directive("journalEntry", function(){
-	return {
-		restrict: "E",
-		scope: {
-			entry: "="
-		},
-		replace: true,
-		templateUrl: "directives/journal-entry.html"
-	};
-})
 
-.directive("journalEntryWriting", function(){
+    var controller = [
+        "$scope",
+        "workshop.PouchDBTest.services.DBService",
+        function($scope, DBService){
+
+            $scope.edit = function(){
+                $scope.entry.editing = true;
+                $scope.writeLock.writing = true;
+            }
+
+            $scope.save = function(){
+                DBService.save($scope.entry.data)
+                    .then(function(doc){
+                        $scope.entry.data._rev = doc.rev;
+                        $scope.entry.editing = false;
+                        $scope.writeLock.writing = false;
+                        $scope.$apply();
+                    })
+                    ;
+            }
+        }
+    ]
+    ;
+
 	return {
 		restrict: "E",
 		scope: {
-			entry: "="
+			entry: "=", // :EntryViewModel
+            writeLock: "="
 		},
 		replace: true,
-		templateUrl: "directives/journal-entry-writing.html"
+        controller: controller,
+		templateUrl: "directives/journal-entry.html"
 	};
 })
 
@@ -30,19 +46,26 @@ angular.module("workshop.PouchDBTest.directives", [])
 		"workshop.PouchDBTest.services.JournalEntryFactory",
 		function($scope, $sanitize, JournalEntryFactory){
 
-			$scope.writing = null;
+            // fields
+			$scope.writeLock = {writing: false};
+            // END: fields
 
+            // viewmodels
+            function EntryViewModel(entry, editing){
+                this.data = entry;
+                this.editing = editing || false;
+            };
+            // END: viewmodels
+
+            // methods
 			$scope.writeJournal = function(){
 				var text = $sanitize('Lorem <a href="#">ipsum</a>');
 				var entry = JournalEntryFactory._new(text, $scope.quest);
-				$scope.writing = entry;
+                var entry_viewmodel = new EntryViewModel(entry, true);
+				$scope.quest.journal.unshift(entry_viewmodel);
+                $scope.writeLock.writing = true;
 			}
-
-			$scope.saveJournal = function(){
-				$scope.quest.journal.unshift($scope.writing);
-				$scope.writing = null;
-			}
-
+            // END: methods
 		}
 	];
 

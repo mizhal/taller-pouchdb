@@ -58,13 +58,22 @@ angular.module("workshop.PouchDBTest.services", [])
 	function(HasTimestampFactory, JournalEntryFactory){
 		this._new = function(name, deadline, desc){
 
+			// 
 			var proto = HasTimestampFactory._new();
+			// 
+			
+			// fields
 			proto.type = "Quest";
 			proto._id = "Quest#" + proto.uuid;
 			proto.name = name;
 			proto.deadline = deadline;
 			proto.desc = desc;
 			proto.journal = [];
+			// END: fields
+
+			// orm conf
+			
+			// END: orm conf
 
 			return proto;
 		}
