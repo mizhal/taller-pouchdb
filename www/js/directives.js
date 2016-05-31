@@ -26,28 +26,28 @@ angular.module("workshop.PouchDBTest.directives", [])
     ]
     ;
 
-	return {
-		restrict: "E",
-		scope: {
-			entry: "=", // :EntryViewModel
+    return {
+        restrict: "E",
+        scope: {
+            entry: "=", // :EntryViewModel
             writeLock: "="
-		},
-		replace: true,
+        },
+        replace: true,
         controller: controller,
-		templateUrl: "directives/journal-entry.html"
-	};
+        templateUrl: "directives/journal-entry.html"
+    };
 })
 
 .directive("questDetail", function(){
 
-	var controller = [ 
-		"$scope",
-		"$sanitize",
-		"workshop.PouchDBTest.services.JournalEntryFactory",
-		function($scope, $sanitize, JournalEntryFactory){
+    var controller = [ 
+        "$scope",
+        "$sanitize",
+        "workshop.PouchDBTest.services.JournalEntryFactory",
+        function($scope, $sanitize, JournalEntryFactory){
 
             // fields
-			$scope.writeLock = {writing: false};
+            $scope.writeLock = {writing: false};
             // END: fields
 
             // viewmodels
@@ -58,26 +58,26 @@ angular.module("workshop.PouchDBTest.directives", [])
             // END: viewmodels
 
             // methods
-			$scope.writeJournal = function(){
-				var text = $sanitize('Lorem <a href="#">ipsum</a>');
-				var entry = JournalEntryFactory._new(text, $scope.quest);
+            $scope.writeJournal = function(){
+                var text = $sanitize('Lorem <a href="#">ipsum</a>');
+                var entry = JournalEntryFactory._new(text, $scope.quest);
                 var entry_viewmodel = new EntryViewModel(entry, true);
-				$scope.quest.journal.unshift(entry_viewmodel);
+                $scope.quest.journal.unshift(entry_viewmodel);
                 $scope.writeLock.writing = true;
-			}
+            }
             // END: methods
-		}
-	];
+        }
+    ];
 
-	return {
-		restrict: "E",
-		scope: {
-			quest: "="
-		},
-		replace: true,
-		controller: controller,
-		templateUrl: "directives/quest-detail.html"
-	};
+    return {
+        restrict: "E",
+        scope: {
+            quest: "="
+        },
+        replace: true,
+        controller: controller,
+        templateUrl: "directives/quest-detail.html"
+    };
 })
 
 ;
