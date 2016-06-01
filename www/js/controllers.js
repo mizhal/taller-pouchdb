@@ -97,7 +97,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 
 		// methods
 		$scope.edit = function() {
-			$state.go("app.quest-edit", {id: $scope.quest._id});
+			$state.go("app.quest-edit", {id: $scope.quest.data._id});
 		};
 
 		$scope.delete = function() {
