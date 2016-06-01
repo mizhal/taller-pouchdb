@@ -108,6 +108,13 @@ angular.module("workshop.PouchDBTest.controllers", [])
 				});
 		}
 		// END: methods
+
+		// ViewModels
+		function QuestViewModel(quest, journal_entries){
+			this.data = quest;
+			this.journal = journal_entries;
+		}
+		// END: ViewModels
 		
 	}
 ])

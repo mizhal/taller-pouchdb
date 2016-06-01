@@ -109,7 +109,9 @@ angular.module("workshop.PouchDBTest.services", [])
 	"workshop.PouchDBTest.services.QuestFactory",
 	"workshop.PouchDBTest.services.JournalEntryFactory",
 	function(DBService, QuestFactory, JournalEntryFactory){
+		var self = this;
 
+		/** PUBLIC **/
 		this.get = function(_id){
 			return DBService.get(_id);
 		}
@@ -141,6 +143,38 @@ angular.module("workshop.PouchDBTest.services", [])
 					}
 				});
 		}
+		/** END: PUBLIC **/
+
+		/** PRIVATE **/
+		var CheckDBViews = function(){
+			for(var i in self.views){
+				DBService.get(self.views[i]._id)
+					.catch(function(error){
+						DBService.save(self.views[i]);
+					});
+			}
+		}
+		/** END: PRIVATE **/
+
+		/** VIEWS & INDICES **/
+		this.views = {};
+		this.views.quest_with_entries = {
+			_id: "_design/quest_with_entries",
+			views: {
+				"quest_with_entries": function(doc) {
+					if(doc.type == "Quest")
+						emit([0, null], doc);
+					else if (doc.type == "JournalEntry")
+						emit([1, doc.created_at], doc);
+				}.toString()
+			}
+		};
+		/** END: VIEWS & INDICES **/
+
+
+		/** init **/
+		CheckDBViews();
+		/** END: init **/
 
 	}
 ])
