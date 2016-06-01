@@ -20,6 +20,15 @@ angular.module("workshop.PouchDBTest.services", [])
 			return self.Pouch.get(_id);
 		};
 
+		this.queryView = function(view, options){
+			options = options || {};
+			return self.Pouch.query(view, options);
+		}
+
+		this.mapRedios = function(mapredios){
+			return self.Pouch.query(mapredios);
+		}
+
 		this.destroy = function(object){
 			return self.Pouch.remove(object);
 		};
@@ -61,14 +70,16 @@ angular.module("workshop.PouchDBTest.services", [])
 	"workshop.PouchDBTest.services.HasTimestampFactory",
 	"workshop.PouchDBTest.services.JournalEntryFactory",
 	function(HasTimestampFactory, JournalEntryFactory){
-		this._new = function(name, deadline, desc){
+		var self = this;
+		this.type = "Quest";
 
+		this._new = function(name, deadline, desc){
 			// 
 			var proto = HasTimestampFactory._new();
 			// 
 			
 			// fields
-			proto.type = "Quest";
+			proto.type = self.type;
 			proto._id = "Quest#" + proto.uuid;
 			proto.name = name;
 			proto.deadline = deadline;
@@ -85,8 +96,12 @@ angular.module("workshop.PouchDBTest.services", [])
 [
 	"workshop.PouchDBTest.services.HasTimestampFactory",
 	function(HasTimestampFactory){
+		var self = this;
+		this.type = "JournalEntry";
+
 		this._new = function(text, parent_object) {
 			var proto = HasTimestampFactory._new();
+			proto.type = self.type;
 			proto._id = "JournalEntry#" + proto.uuid;
 			proto.text = text;
 			proto.parent = parent_object._id;
@@ -111,6 +126,10 @@ angular.module("workshop.PouchDBTest.services", [])
 	function(DBService, QuestFactory, JournalEntryFactory){
 		var self = this;
 
+		this.constants = {
+			DISCRIMINATOR: 1
+		};
+
 		/** PUBLIC **/
 		this.get = function(_id){
 			return DBService.get(_id);
@@ -127,7 +146,29 @@ angular.module("workshop.PouchDBTest.services", [])
 		}
 
 		this.getWithJournalEntries = function(_id, how_many_entries){
-
+			return DBService.queryView("quest_with_entries/by_date",
+				{
+					startkey: [_id], endkey: [_id, {}, {}]
+				})
+			 	.then(function(res){
+			 		var entries = [];
+			 		var object = null;
+			 		for(var i in res.rows){
+			 			var row = res.rows[i];
+			 			if(row.key[self.constants.DISCRIMINATOR] == QuestFactory.type){
+			 				object = row.value;
+			 			} 
+			 			else if (row.key[self.constants.DISCRIMINATOR] == JournalEntryFactory.type)
+			 			{
+			 				entries.push(row.value);
+			 			}
+			 		}
+			 		object.journal = entries;
+			 		return object;
+				})
+				.catch(function(error){
+					return;
+				});
 		}
 
 		this.save = function(quest){
@@ -161,12 +202,14 @@ angular.module("workshop.PouchDBTest.services", [])
 		this.views.quest_with_entries = {
 			_id: "_design/quest_with_entries",
 			views: {
-				"quest_with_entries": function(doc) {
-					if(doc.type == "Quest")
-						emit([0, null], doc);
-					else if (doc.type == "JournalEntry")
-						emit([1, doc.created_at], doc);
-				}.toString()
+				by_date: {
+					map: function(doc) {
+						if(doc.type == "Quest")
+							emit([doc._id, doc.type, 0], doc);
+						else if (doc.type == "JournalEntry")
+							emit([doc.parent, doc.type, doc.created_at], doc);
+					}.toString()
+				}
 			}
 		};
 		/** END: VIEWS & INDICES **/

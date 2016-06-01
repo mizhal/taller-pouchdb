@@ -1,10 +1,10 @@
 <article class="quest">
-	<h2>{{quest.name}}</h2>
-	<section class="description">{{quest.description}}</section>
+	<h2>{{quest.data.name}}</h2>
+	<section class="description">{{quest.data.description}}</section>
 	<section class="metadata">
 		<dl>
-			<dt ng-if="quest.deadline">Deadline:</dt>
-			<dd ng-if="quest.deadline">{{quest.deadline}}</dd>
+			<dt ng-if="quest.data.deadline">Deadline:</dt>
+			<dd ng-if="quest.data.deadline">{{quest.data.deadline}}</dd>
 		</dl>
 	</section>
 	<section class="journal">

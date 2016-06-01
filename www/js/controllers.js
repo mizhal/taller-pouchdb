@@ -83,9 +83,9 @@ angular.module("workshop.PouchDBTest.controllers", [])
 
 		// init 
 		if($stateParams.id) {
-			QuestService.get($stateParams.id)
+			QuestService.getWithJournalEntries($stateParams.id)
 				.then(function(doc){
-					$scope.quest = doc;
+					$scope.quest = new QuestViewModel(doc, doc.journal);
 					$scope.$apply();
 				})
 				.catch(function(error){
@@ -108,14 +108,6 @@ angular.module("workshop.PouchDBTest.controllers", [])
 				});
 		}
 		// END: methods
-
-		// ViewModels
-		function QuestViewModel(quest, journal_entries){
-			this.data = quest;
-			this.journal = journal_entries;
-		}
-		// END: ViewModels
-		
 	}
 ])
 

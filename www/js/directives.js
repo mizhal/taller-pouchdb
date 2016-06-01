@@ -51,13 +51,6 @@ angular.module("workshop.PouchDBTest.directives", [])
             $scope.writeLock = {writing: false};
             // END: fields
 
-            // viewmodels
-            function EntryViewModel(entry, editing){
-                this.data = entry;
-                this.editing = editing || false;
-            };
-            // END: viewmodels
-
             // methods
             $scope.writeJournal = function(){
                 var text = $sanitize('Lorem <a href="#">ipsum</a>');
