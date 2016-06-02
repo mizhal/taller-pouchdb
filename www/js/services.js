@@ -59,6 +59,16 @@ angular.module("workshop.PouchDBTest.services", [])
 			return parts.join("-");
 		}
 
+		/**
+			Long UUIDs are presented as base-16 (hex) encoded integers, thus tend to 
+			be long an unmanageable as references (for example for copying in a 
+			paper notebook). If we re-encode the integer using an alphabet with more
+			characters, we could obtain a shorter string. Hashids library encodes
+			integers using an alphabet of 62 characters (thus base-62) as we wanted.
+			
+			The process has no collisions (two long uuids generating the same short
+			uuid), because it is only a translation and not a hashing function.  
+		**/
 		this.shortUuid = function(){
 			var parts = self.generate();
 			var integer = parseInt(parts.join(""), 16);
