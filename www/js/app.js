@@ -8,7 +8,8 @@ var app = angular.module("workshop.PouchDBTest", [
 	// app
 	"workshop.PouchDBTest.controllers",
 	"workshop.PouchDBTest.services",
-	"workshop.PouchDBTest.directives"
+	"workshop.PouchDBTest.directives",
+	"workshop.PouchDBTest.filters",
 	// END: app
 ])
 

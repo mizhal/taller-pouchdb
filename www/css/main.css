@@ -124,14 +124,14 @@ article.quest section.journal article.journal-entry .content {
 	padding: 10px 0 0 1em;
 }
 
-article.quest section.journal article.journal-entry .date,
-article.quest section.journal article.journal-entry .refid {
+article.quest section.journal article.journal-entry .date {
 	font-style: italic;
 	font-weight: bold;
 }
 
 article.quest section.journal article.journal-entry .refid {
 	color: #fff;
+	font-weight: bold;
 }
 article.quest section.journal article.journal-entry .text {
 	padding-left: 0.5em;

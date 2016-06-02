@@ -38,6 +38,10 @@ angular.module("workshop.PouchDBTest.services", [])
 .service("workshop.PouchDBTest.services.UUIDService", 
 [
 	function(){
+		var self = this;
+
+		self.SALT = "5iuHO5DP0ygXYvXLCvM-A0@fN0Bs-Bpwr9-(2Tzb";
+
 		/*** Attribution: http://codepen.io/Jvsierra/pen/BNbEjW ***/
 		this.generate = function () {
 		  function s4() {
@@ -45,8 +49,23 @@ angular.module("workshop.PouchDBTest.services", [])
 		      .toString(16)
 		      .substring(1);
 		  }
-		  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-		    s4() + '-' + s4() + s4() + s4();
+		  return [s4() + s4(), 
+		  	s4(), s4(), s4(), 
+		    s4() + s4() + s4()];
+		}
+
+		this.longUuid = function(){
+			var parts = self.generate();
+			return parts.join("-");
+		}
+
+		this.shortUuid = function(){
+			var parts = self.generate();
+			var integer = parseInt(parts.join(""), 16);
+
+			var hashids = new Hashids(self.SALT, 0, "0123456789abcdef");
+
+			return hashids.encode(integer);
 		}
 	}
 ])
@@ -57,7 +76,8 @@ angular.module("workshop.PouchDBTest.services", [])
 	function(UUIDService){
 		this._new = function(){
 			return {
-				uuid: UUIDService.generate(),
+				uuid: UUIDService.longUuid(),
+				shortUuid: UUIDService.shortUuid(),
 				created_at: new Date(),
 				updated_at: new Date()
 			};
