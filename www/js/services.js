@@ -204,11 +204,13 @@ angular.module("workshop.PouchDBTest.services", [])
 			views: {
 				by_date: {
 					map: function(doc) {
-						if(doc.type == "Quest")
+						if(doc.type == "$$1")
 							emit([doc._id, doc.type, 0], doc);
-						else if (doc.type == "JournalEntry")
+						else if (doc.type == "$$2")
 							emit([doc.parent, doc.type, doc.created_at], doc);
 					}.toString()
+						.replace("$$1", QuestFactory.type)
+						.replace("$$2", JournalEntryFactory.type)
 				}
 			}
 		};

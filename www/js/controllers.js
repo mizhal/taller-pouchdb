@@ -101,7 +101,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 		};
 
 		$scope.delete = function() {
-			QuestService.destroy($scope.quest)
+			QuestService.destroy($scope.quest.data)
 				.then(function(){
 					$rootScope.$broadcast("update-quests");
 					$state.go("app.quests");		

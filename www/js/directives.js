@@ -54,7 +54,7 @@ angular.module("workshop.PouchDBTest.directives", [])
             // methods
             $scope.writeJournal = function(){
                 var text = $sanitize('Lorem <a href="#">ipsum</a>');
-                var entry = JournalEntryFactory._new(text, $scope.quest);
+                var entry = JournalEntryFactory._new(text, $scope.quest.data);
                 var entry_viewmodel = new EntryViewModel(entry, true);
                 $scope.quest.journal.unshift(entry_viewmodel);
                 $scope.writeLock.writing = true;
