@@ -148,7 +148,8 @@ angular.module("workshop.PouchDBTest.services", [])
 		this.getWithJournalEntries = function(_id, how_many_entries){
 			return DBService.queryView("quest_with_entries/by_date",
 				{
-					startkey: [_id], endkey: [_id, {}, {}]
+					endkey: [_id], startkey: [_id, {}, {}],
+					descending: true,
 				})
 			 	.then(function(res){
 			 		var entries = [];
