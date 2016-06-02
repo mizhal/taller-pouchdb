@@ -9,11 +9,14 @@
 
 .master-slave .left a {
 	display: block;
-	width: 100%;
 }
 
 .content {
 	padding: 0;
+}
+
+.pad-whole-1 {
+	padding: 1em;
 }
 
 .toolbar.black-flat {
