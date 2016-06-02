@@ -1,6 +1,7 @@
-function EntryViewModel(entry, editing){
+function EntryViewModel(entry, editing, cancellable){
     this.data = entry;
     this.editing = editing || false;
+    this.cancellable = cancellable || false;
 }
 
 function QuestViewModel(quest, journal_entries){

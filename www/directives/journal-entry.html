@@ -11,5 +11,7 @@
     <div class="toolbar right">
         <button ng-if="!entry.editing" ng-click="edit()">Editar</button>
         <button ng-if="entry.editing" ng-click="save()">Guardar</button>
+        <button ng-if="entry.editing && entry.cancellable" ng-click="cancel()">Cancelar</button>
+        <button ng-if="!entry.editing" ng-click="destroy()">Borrar</button>
     </div>
 </article>

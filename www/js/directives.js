@@ -4,9 +4,11 @@ angular.module("workshop.PouchDBTest.directives", [])
 
     var controller = [
         "$scope",
+        "$rootScope",
         "workshop.PouchDBTest.services.DBService",
-        function($scope, DBService){
+        function($scope, $rootScope, DBService){
 
+            // methods
             $scope.edit = function(){
                 if ($scope.writeLock.writing) 
                     return;
@@ -18,11 +20,27 @@ angular.module("workshop.PouchDBTest.directives", [])
                 DBService.save($scope.entry.data)
                     .then(function(doc){
                         $scope.entry.editing = false;
+                        $scope.entry.cancellable = false;
                         $scope.writeLock.writing = false;
                         $scope.$apply();
-                    })
-                    ;
+                    });
             }
+
+            $scope.cancel = function(){
+                $scope.entry.editing = false;
+                $scope.writeLock.writing = false;
+                $rootScope.$broadcast("journal-entry-cancelled");
+            }
+
+            $scope.destroy = function(){
+                DBService.destroy($scope.entry.data)
+                    .then(function(){
+                        $scope.entry.cancellable = true;
+                        $rootScope.$broadcast("journal-entry-cancelled");           
+                    })
+            }
+            // END: methods
+
         }
     ]
     ;
@@ -55,11 +73,20 @@ angular.module("workshop.PouchDBTest.directives", [])
             $scope.writeJournal = function(){
                 var text = $sanitize('Lorem <a href="#">ipsum</a>');
                 var entry = JournalEntryFactory._new(text, $scope.quest.data);
-                var entry_viewmodel = new EntryViewModel(entry, true);
+                var entry_viewmodel = new EntryViewModel(entry, true, true);
                 $scope.quest.journal.unshift(entry_viewmodel);
                 $scope.writeLock.writing = true;
             }
             // END: methods
+
+            // events
+            $scope.$on("journal-entry-cancelled", function(){
+                $scope.quest.journal = $scope.quest.journal.filter(function(obj){
+                    return !obj.cancellable;
+                });
+                $scope.$apply();
+            })
+            // END: events
         }
     ];
 
