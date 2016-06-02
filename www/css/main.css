@@ -13,18 +13,50 @@
 }
 
 .content {
-	padding: 15px;
+	padding: 0;
+}
+
+.toolbar.black-flat {
+	padding: 10px 1em;
+	width: 100%;
+
+	background-color: #000;
 }
 /** END: MASTER-SLAVE TEMPLATE **/
+
+/** LIST **/
+.master-list {
+	padding: 0;
+}
+
+.master-list a {
+	padding: 5px 1em;
+	text-decoration: none;
+}
+
+.master-list a.selected {
+	background-color: #000;
+	color: #fff;
+}
+/** END: LIST **/
 
 /** EDIT TEMPLATE **/
 .edit.quest form .row {
 	margin: 1em 0;
 }
 
+.slave-detail .row {
+	margin: 0;
+	padding: 0;
+}
+
 .row.right {
    -webkit-justify-content: flex-end;
    justify-content: flex-end;
+}
+
+.toolbar.right {
+	text-align: right;
 }
 
 /** END: EDIT TEMPLATE **/
@@ -34,3 +66,71 @@ article.journal-entry textarea {
 	width: 100%;
 }
 /** END: JOURNAL EMBEDDED ENTRIES **/
+
+/** QUEST-DETAIL **/
+article.quest h2, article.quest h3, article.quest h4, article.quest h5 {
+	margin: 0;
+}
+article.quest header {
+	padding: 10px 1em;
+
+	background-color: #000;
+	color: #fff;
+}
+
+article.quest section.description {
+	padding: 10px 1em;
+
+	background-color: #D5C77D;
+}
+
+article.quest section.description .text {
+	padding-left: 2em;
+}
+
+article.quest section.metadata dl {
+	margin: 0;
+	padding: 0;
+}
+
+article.quest section.metadata {
+	background-color: #fff;
+	color: #fff;
+}
+
+article.quest .row {
+	margin: 0;
+	padding: 0;
+}
+
+article.quest section.journal {
+
+	background-color: #B0A87C;
+}
+
+article.quest section.journal .toolbar {
+	background-color: #000;
+	color: #fff;
+}
+
+article.quest section.journal article.journal-entry {
+	border-bottom: 2px solid #000;
+}
+
+article.quest section.journal article.journal-entry .content {
+	padding: 10px 0 0 1em;
+}
+
+article.quest section.journal article.journal-entry .date,
+article.quest section.journal article.journal-entry .refid {
+	font-style: italic;
+	font-weight: bold;
+}
+
+article.quest section.journal article.journal-entry .refid {
+	color: #fff;
+}
+article.quest section.journal article.journal-entry .text {
+	padding-left: 0.5em;
+}
+/** END: QUEST-DETAIL **/

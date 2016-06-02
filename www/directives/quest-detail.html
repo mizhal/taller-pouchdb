@@ -1,21 +1,33 @@
 <article class="quest">
 	<header>
 		<h2>{{quest.data.name}}</h2>
-		<h5>{{quest.data._id}}</h5>
+		<h5>{{quest.data.uuid}}</h5>
 	</header>
-	<section class="description">{{quest.data.description}}</section>
-	<section class="metadata">
-		<dl>
-			<dt ng-if="quest.data.deadline">Deadline:</dt>
-			<dd ng-if="quest.data.deadline">{{quest.data.deadline}}</dd>
-		</dl>
+	<section class="description">
+		<h3>DESC:</h3>
+		<div class="text" ng-bind-html="quest.data.description"></div>
 	</section>
-	<section class="journal">
-		<div class="toolbar">
-			<button ng-if="!writeLock.writing" ng-click="writeJournal()">Escribir</button>
-		</div>
-		<div ng-repeat="entry in quest.journal">
-			<journal-entry entry="entry" write-lock="writeLock"/>
-		</div>
-	</section>
+	<div class="row">
+		<section class="metadata">
+			<dl>
+				<dt ng-if="quest.data.deadline">Deadline:</dt>
+				<dd ng-if="quest.data.deadline">{{quest.data.deadline}}</dd>
+			</dl>
+		</section>
+	</div>
+	<div class="row">
+		<section class="journal col-50">
+			<header>
+				<h3>JOURNAL:</h3>
+			</header>
+			<div class="toolbar right">
+				<button ng-if="!writeLock.writing" ng-click="writeJournal()">Escribir</button>
+			</div>
+			<div ng-repeat="entry in quest.journal">
+				<journal-entry entry="entry" write-lock="writeLock"/>
+			</div>
+		</section>
+		<section class="tasks col-50">
+		</section>
+	</div>
 </article>

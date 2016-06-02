@@ -1,12 +1,14 @@
 <article class="journal-entry">
     <!-- model = EntryViewModel -->
-    <span class="uuid">{{entry.data.uuid}}</span>
-    <span class="date">{{entry.data.created_at}}</span>
-    <div class="text">
-        <p ng-if="!entry.editing" ng-bind-html="entry.data.text"></p>
-        <textarea ng-if="entry.editing" ng-model="entry.data.text"></textarea>
+    <div class="content">
+        <span class="refid">#{{entry.data.uuid }}</span>
+        <span class="date">{{entry.data.created_at | date : 'dd-MM-yy hh:mm'}}</span>
+        <div class="text">
+            <p ng-if="!entry.editing" ng-bind-html="entry.data.text"></p>
+            <textarea ng-if="entry.editing" ng-model="entry.data.text"></textarea>
+        </div>
     </div>
-    <div class="toolbar">
+    <div class="toolbar right">
         <button ng-if="!entry.editing" ng-click="edit()">Editar</button>
         <button ng-if="entry.editing" ng-click="save()">Guardar</button>
     </div>
