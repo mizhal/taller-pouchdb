@@ -1,0 +1,7 @@
+<article class="task">
+	<h3 ng-if="!task.editing" ng-dblclick="edit()"><a class="status-button {{task.data.status}}">{{task.data.status}}</a> {{task.data.name}}</h3>
+	<input ng-if="task.editing" type="text" ng-model="task.data.name" />
+	<button ng-if="task.editing" ng-click="save()">Ok</button>
+	<button ng-if="task.editing" ng-click="destroy()">Borrar</button>
+	<section ng-if="task.data.explanation_notes" class="explanation-notes"></section>
+</article>

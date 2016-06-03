@@ -20,13 +20,22 @@
 				<h3>JOURNAL:</h3>
 			</header>
 			<div class="toolbar right">
-				<button ng-if="!writeLock.writing" ng-click="writeJournal()">Escribir</button>
+				<button ng-class="writeLock.writing ? 'disabled' : ''" ng-click="writeJournal()">Escribir</button>
 			</div>
 			<div ng-repeat="entry in quest.journal">
 				<journal-entry entry="entry" write-lock="writeLock"/>
 			</div>
 		</section>
 		<section class="tasks col-50">
+			<header>
+				<h3>TRACK:</h3>
+			</header>
+			<div class="toolbar right">
+				<button ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addTask()">Nueva Tarea</button>
+			</div>
+			<div ng-repeat="task in quest.tasks">
+				<quest-task task="task" quest="quest" write-lock="writeLock"/>
+			</div>
 		</section>
 	</div>
 </article>

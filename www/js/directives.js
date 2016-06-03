@@ -63,7 +63,9 @@ angular.module("workshop.PouchDBTest.directives", [])
         "$scope",
         "$sanitize",
         "workshop.PouchDBTest.services.JournalEntryFactory",
-        function($scope, $sanitize, JournalEntryFactory){
+        "workshop.PouchDBTest.services.TaskFactory",
+        "workshop.PouchDBTest.services.QuestService",
+        function($scope, $sanitize, JournalEntryFactory, TaskFactory, QuestService){
 
             // fields
             $scope.writeLock = {writing: false};
@@ -77,6 +79,18 @@ angular.module("workshop.PouchDBTest.directives", [])
                 $scope.quest.journal.unshift(entry_viewmodel);
                 $scope.writeLock.writing = true;
             }
+
+            $scope.addTask = function(){
+                var text = 'To do...';
+                var task = TaskFactory._new(text, $scope.quest.data);
+                var vm = $scope.quest.addTask(task);
+                vm.editing = true;
+                $scope.writeLock.writing = true;   
+            }
+
+            $scope.removeTask = function(task_vm){
+                $scope.quest.removeTask(task_vm);
+            }
             // END: methods
 
             // events
@@ -85,6 +99,10 @@ angular.module("workshop.PouchDBTest.directives", [])
                     return !obj.cancellable;
                 });
                 $scope.$apply();
+            })
+
+            $scope.$on("quest-nested-object-changed", function(){
+                QuestService.save($scope.quest.data);
             })
             // END: events
         }
@@ -99,6 +117,52 @@ angular.module("workshop.PouchDBTest.directives", [])
         controller: controller,
         templateUrl: "directives/quest-detail.html"
     };
+})
+
+.directive("questTask", function(){
+
+    var controller = [
+        "$scope",
+        "$rootScope",
+        "workshop.PouchDBTest.services.DBService",
+        function($scope, $rootScope, DBService){
+
+            // methods
+            $scope.save = function(){
+                $rootScope.$broadcast("quest-nested-object-changed");
+                $scope.task.editing = false;
+                $scope.writeLock.writing = false;
+            }
+
+            $scope.edit = function(){
+                if($scope.writeLock.writing)
+                    return;
+
+                $scope.task.editing = true;
+                $scope.writeLock.writing = true;
+            }
+
+            $scope.destroy = function(){
+                $scope.quest.removeTask($scope.task);
+                $scope.writeLock.writing = false;
+                $rootScope.$broadcast("quest-nested-object-changed");
+            }
+            // END: methods
+
+        }
+    ]
+
+    return {
+        restrict: "E",
+        scope: {
+            task: "=",
+            quest: "=",
+            writeLock: "="
+        },
+        replace: true,
+        controller: controller,
+        templateUrl: "directives/quest-task.html"
+    }
 })
 
 ;

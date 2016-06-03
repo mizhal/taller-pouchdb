@@ -1,3 +1,24 @@
+/** COMMON **/
+button {
+	border: 0;
+	padding: 0.5em 1em;
+
+	color: white;
+	background-color: #8B8E2A;
+
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
+
+.disabled {
+	pointer-events: none;
+	background-color: #ddd;
+}
+/** END: COMMON **/;
+
 /** MASTER-SLAVE TEMPLATE **/
 .master-slave .frame {
 	border: 2px solid black;
@@ -136,4 +157,26 @@ article.quest section.journal article.journal-entry .refid {
 article.quest section.journal article.journal-entry .text {
 	padding-left: 0.5em;
 }
+
+article.quest section.tasks .toolbar {
+	background-color: #D5C77D;
+	color: #000;
+}
 /** END: QUEST-DETAIL **/
+
+/** QUEST-TASK **/
+article.quest article.task {
+	padding: 0.5em 1em;
+}
+
+article.quest article.task h3 a.status-button {
+	margin: 0.5em 1em 0.5em 0.5em;
+	padding: 5px 10px;
+	border-radius: 3px;
+}
+
+article.quest article.task h3 a.status-button.TODO {
+	background-color: #613675;
+	color: white;
+}
+/** END: QUEST-TASK **/

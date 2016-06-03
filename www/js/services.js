@@ -115,6 +115,7 @@ angular.module("workshop.PouchDBTest.services", [])
 			proto.deadline = deadline;
 			proto.desc = desc;
 			proto.journal = [];
+			proto.tasks = []; // nested
 			// END: fields
 
 			return proto;
@@ -128,13 +129,46 @@ angular.module("workshop.PouchDBTest.services", [])
 	function(HasTimestampFactory){
 		var self = this;
 		this.type = "JournalEntry";
+		this.administrativeTypes = {
+			USER: "USER",
+			LOG: "LOG"
+		}
 
 		this._new = function(text, parent_object) {
 			var proto = HasTimestampFactory._new();
 			proto.type = self.type;
+			proto.administrativeType = self.administrativeTypes.USER;
 			proto._id = "JournalEntry#" + proto.uuid;
 			proto.text = text;
 			proto.parent = parent_object._id;
+
+			return proto;
+		}
+	}
+])
+
+.service("workshop.PouchDBTest.services.TaskFactory", 
+[
+	"workshop.PouchDBTest.services.HasTimestampFactory",
+	function(HasTimestampFactory){
+		var self = this;
+		this.type = "Task";
+		this.statuses = {
+			TODO: "TODO",
+			DONE: "DONE",
+			NEXT: "NEXT",
+			DELEGATED: "DELEGATED"
+		}
+
+		this._new = function(name, parent_quest){
+			var proto = HasTimestampFactory._new();
+			proto.type = self.type;
+			proto.parent = parent_quest._id;
+			proto.name = name;
+			proto.status = self.statuses.TODO;
+			proto.done_datetime = null;
+			proto.delegated_to_contact_id = null;
+			proto.explanations_notes = null;
 
 			return proto;
 		}
