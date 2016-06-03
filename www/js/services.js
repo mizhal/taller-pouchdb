@@ -213,7 +213,8 @@ angular.module("workshop.PouchDBTest.services", [])
 			return DBService.Pouch.allDocs(
 					{
 		            	startkey: "Quest#",
-		            	endkey: "Quest#\uffff"
+		            	endkey: "Quest#\uffff",
+		            	limit: 1
 					}
 				).then(function(doc){
 					if(doc.rows.length > 0)
