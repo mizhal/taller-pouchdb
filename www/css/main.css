@@ -13,9 +13,28 @@ button {
     -o-user-select: none;
 }
 
+header {
+	position: relative;
+}
+
 .disabled {
 	pointer-events: none;
 	background-color: #ddd;
+}
+
+.row {
+	margin: 0;
+	padding: 0;
+}
+
+.right-button {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.header-button {
+	padding: 1em;
 }
 /** END: COMMON **/;
 
@@ -67,11 +86,6 @@ button {
 /** EDIT TEMPLATE **/
 .edit.quest form .row {
 	margin: 1em 0;
-}
-
-.slave-detail .row {
-	margin: 0;
-	padding: 0;
 }
 
 .row.right {
@@ -156,6 +170,10 @@ article.quest section.journal article.journal-entry .refid {
 }
 article.quest section.journal article.journal-entry .text {
 	padding-left: 0.5em;
+}
+
+article.quest section.tasks header {
+	background-color: #555;
 }
 
 article.quest section.tasks .toolbar {
