@@ -69,8 +69,8 @@ angular.module("workshop.PouchDBTest.services", [])
 			The process has no collisions (two long uuids generating the same short
 			uuid), because it is only a translation and not a hashing function.  
 		**/
-		this.shortUuid = function(){
-			var parts = self.generate();
+		this.shortUuid = function(long_uuid){
+			var parts = long_uuid.split("-");
 			var integer = parseInt(parts.join(""), 16);
 
 			var hashids = new Hashids(self.SALT, 0, "0123456789abcdef");
@@ -85,9 +85,10 @@ angular.module("workshop.PouchDBTest.services", [])
 	"workshop.PouchDBTest.services.UUIDService",
 	function(UUIDService){
 		this._new = function(){
+			var uuid = UUIDService.longUuid()
 			return {
-				uuid: UUIDService.longUuid(),
-				shortUuid: UUIDService.shortUuid(),
+				uuid: uuid,
+				shortUuid: UUIDService.shortUuid(uuid),
 				created_at: new Date(),
 				updated_at: new Date()
 			};
