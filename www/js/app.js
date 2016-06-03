@@ -30,9 +30,19 @@ var app = angular.module("workshop.PouchDBTest", [
 		views: {
 			"list": {
 				templateUrl: "templates/list.html",
-				controller: ["$scope", "$stateParams", function($scope, $stateParams){
-					$scope.selected = $stateParams.id;
-				}]
+				controller: [
+					"$scope", 
+					"$stateParams", 
+					"workshop.PouchDBTest.services.QuestService", 
+					"$state",
+					function($scope, $stateParams, QuestService, $state){
+						QuestService.getFirstId()
+							.then(function(id){
+								if(id)
+									$state.go("app.quest", {id: id});
+							});
+					}
+				]
 			},
 			"detail": {
 				template: "",

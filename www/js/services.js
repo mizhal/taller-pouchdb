@@ -175,6 +175,19 @@ angular.module("workshop.PouchDBTest.services", [])
 			);
 		}
 
+		this.getFirstId = function(){
+			return DBService.Pouch.allDocs(
+					{
+		            	startkey: "Quest#",
+		            	endkey: "Quest#\uffff"
+					}
+				).then(function(doc){
+					if(doc.rows.length > 0)
+						return doc.rows[0].id;
+					else return null;
+				})
+		}
+
 		this.getWithJournalEntries = function(_id, how_many_entries){
 			return DBService.queryView("quest_with_entries/by_date",
 				{
