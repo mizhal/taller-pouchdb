@@ -1,3 +1,12 @@
+/** Viewmodels are, in fact, the same as angular controllers restricted
+	to some portion of the interface or html tag.
+	For example these viewmodels I use could be built attaching
+	an angular controller to article.quest or article.journal-entry.
+	But for this feature, I choose to have control of the constructor
+	of viewmodels, so I could set them as editable or cancellable from
+	the start.
+**/
+
 function EntryViewModel(entry, editing, cancellable){
     this.data = entry;
     this.editing = editing || false;

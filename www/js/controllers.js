@@ -83,7 +83,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 
 		// init 
 		if($stateParams.id) {
-			QuestService.getWithJournalEntries($stateParams.id)
+			QuestService.getWithJournalEntries($stateParams.id, "DATE_ASC")
 				.then(function(doc){
 					$scope.quest = new QuestViewModel(doc, doc.journal);
 					$scope.$apply();

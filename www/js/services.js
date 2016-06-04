@@ -5,6 +5,26 @@ angular.module("workshop.PouchDBTest.services", [])
 	"$q",
 	function($q){
 		var self = this;
+
+		/** SORTING PROTOCOL **/
+		this.sort_criteria = {
+			DATE_DESC: "DATE_DESC",
+			DATE_ASC: "DATE_ASC",
+			NAME_DESC: "NAME_DESC",
+			NAME_ASC: "NAME_ASC",
+			LAST_JOURNAL_DESC: "LAST_JOURNAL_DESC",
+			UPDATED_DESC: "UPDATED_DESC"
+		}
+
+		this.prepareSortParams = function(_id, sort_criteria, sort_criteria_params){
+			var params_lambda = sort_criteria_params[sort_criteria];
+			if(params_lambda)
+				return params_lambda(_id)
+			else 
+				throw "sort criterium " + sort_criteria + " not supported";
+		}
+		/** END: SORTING PROTOCOL **/
+
 		this.Pouch = new PouchDB("test"); // size limits ignored as of now for sanity sake
 
 		this.save = function(object) {
@@ -195,6 +215,32 @@ angular.module("workshop.PouchDBTest.services", [])
 			DISCRIMINATOR: 1
 		};
 
+		/** SORTING PROTOCOL **/
+
+		/** params are parameterized (mindblow!), so they should be 
+			enclosed inside lambda-functions **/
+		this.sort_criteria_params = {
+			DATE_DESC: function(_id){
+				return {
+					endkey: [_id], startkey: [_id, {}, {}],
+					descending: true,
+				}
+			},
+			DATE_ASC: function(_id) { 
+				return {
+					startkey: [_id], endkey: [_id, {}, {}],
+					descending: false,
+				}
+			}
+		}
+
+		this.sort_criteria_views = {
+			DATE_ASC: "quest_with_entries/by_date",
+			DATE_DESC: "quest_with_entries/by_date"
+		}
+		/** END: SORTING PROTOCOL **/
+
+
 		/** PUBLIC **/
 		this.get = function(_id){
 			return DBService.get(_id);
@@ -224,12 +270,17 @@ angular.module("workshop.PouchDBTest.services", [])
 				})
 		}
 
-		this.getWithJournalEntries = function(_id, how_many_entries){
-			return DBService.queryView("quest_with_entries/by_date",
-				{
-					endkey: [_id], startkey: [_id, {}, {}],
-					descending: true,
-				})
+		this.getWithJournalEntries = function(_id, sort_criteria = "DATE_DESC"){
+
+			var sort_params = DBService.prepareSortParams(
+				_id, 
+				sort_criteria,
+				self.sort_criteria_params
+			);
+			var sort_view = self.sort_criteria_views[sort_criteria];
+
+			return DBService.queryView(sort_view, sort_params
+				)
 			 	.then(function(res){
 			 		var entries = [];
 			 		var object = null;
