@@ -14,11 +14,11 @@ angular.module("workshop.PouchDBTest.controllers", [])
 		};
 
 		$scope.updateQuests = function(){
-			QuestService.all()
+			QuestService.all("DATE_ASC")
 			.then(function(response){
 				$scope.quests = [];
 				response.rows.map(function(row){
-					$scope.quests.push(row.doc);
+					$scope.quests.push(row.value);
 				});
 				$scope.$apply();
 			})

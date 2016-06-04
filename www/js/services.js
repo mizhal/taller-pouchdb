@@ -219,7 +219,7 @@ angular.module("workshop.PouchDBTest.services", [])
 
 		/** params are parameterized (mindblow!), so they should be 
 			enclosed inside lambda-functions **/
-		this.sort_criteria_params = {
+		this.sort_criteria_params_for_journal = {
 			DATE_DESC: function(_id){
 				return {
 					endkey: [_id], startkey: [_id, {}, {}],
@@ -234,9 +234,27 @@ angular.module("workshop.PouchDBTest.services", [])
 			}
 		}
 
-		this.sort_criteria_views = {
+		this.sort_criteria_views_for_journal = {
 			DATE_ASC: "quest_with_entries/by_date",
 			DATE_DESC: "quest_with_entries/by_date"
+		}
+
+		this.sort_criteria_params_for_quests = {
+			DATE_DESC: function(){
+				return {
+					descending: true,
+				}
+			},
+			DATE_ASC: function() { 
+				return {
+					descending: false,
+				}
+			}
+		}
+
+		this.sort_criteria_views_for_quests = {
+			DATE_ASC: "quests_all/by_date",
+			DATE_DESC: "quests_all/by_date"
 		}
 		/** END: SORTING PROTOCOL **/
 
@@ -247,13 +265,15 @@ angular.module("workshop.PouchDBTest.services", [])
 		}
 
 		this.all = function(sort_criteria, offset, limit){
-			return DBService.Pouch.allDocs(
-				{
-					include_docs: true,
-		            startkey: "Quest#",
-		            endkey: "Quest#\uffff"
-				}
+
+			var sort_params = DBService.prepareSortParams(
+				null, 
+				sort_criteria,
+				self.sort_criteria_params_for_quests
 			);
+			var sort_view = self.sort_criteria_views_for_quests[sort_criteria];
+
+			return DBService.queryView(sort_view, sort_params);
 		}
 
 		this.getFirstId = function(){
@@ -275,12 +295,11 @@ angular.module("workshop.PouchDBTest.services", [])
 			var sort_params = DBService.prepareSortParams(
 				_id, 
 				sort_criteria,
-				self.sort_criteria_params
+				self.sort_criteria_params_for_journal
 			);
-			var sort_view = self.sort_criteria_views[sort_criteria];
+			var sort_view = self.sort_criteria_views_for_journal[sort_criteria];
 
-			return DBService.queryView(sort_view, sort_params
-				)
+			return DBService.queryView(sort_view, sort_params)
 			 	.then(function(res){
 			 		var entries = [];
 			 		var object = null;
@@ -344,7 +363,20 @@ angular.module("workshop.PouchDBTest.services", [])
 						.replace("$$2", JournalEntryFactory.type)
 				}
 			}
-		};
+		}
+
+		this.views.quests_all = {
+			_id: "_design/quests_all",
+			views: {
+				by_date: {
+					map: function(doc){
+						if(doc.type == "$$1")
+							emit(doc.created_at, doc);
+					}.toString()
+						.replace("$$1", QuestFactory.type)
+				}
+			}
+		}
 		/** END: VIEWS & INDICES **/
 
 
