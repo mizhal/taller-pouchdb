@@ -112,6 +112,8 @@ angular.module("workshop.PouchDBTest.directives", [])
                     default:
                         throw "sort criterium " + sort_criteria + " not supported";
                 }
+
+                $scope.$emit("quest-nested-object-changed");
             }
 
             $scope.sortTasksDateToggle = function(){
