@@ -109,8 +109,8 @@ angular.module("workshop.PouchDBTest.services", [])
 			return {
 				uuid: uuid,
 				shortUuid: UUIDService.shortUuid(uuid),
-				created_at: new Date(),
-				updated_at: new Date()
+				created_at: (new Date()).toISOString(),
+				updated_at: (new Date()).toISOString()
 			};
 		}
 	}
@@ -246,7 +246,7 @@ angular.module("workshop.PouchDBTest.services", [])
 			return DBService.get(_id);
 		}
 
-		this.all = function(offset, limit){
+		this.all = function(sort_criteria, offset, limit){
 			return DBService.Pouch.allDocs(
 				{
 					include_docs: true,

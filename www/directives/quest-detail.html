@@ -27,7 +27,10 @@
 		<section class="tasks col-50">
 			<header>
 				<h3>TRACK:</h3>
-				<button class="right-button header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addTask()">Nueva Tarea</button>
+				<div class="right-button">
+					<button class="header-button" ng-click="sortTasksDateToggle()">Por Fecha:</button>
+					<button class="header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addTask()">Nueva Tarea</button>
+				</div>
 			</header>
 			<div ng-repeat="task in quest.tasks">
 				<quest-task task="task" quest="quest" write-lock="writeLock"/>

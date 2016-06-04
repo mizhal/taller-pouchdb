@@ -65,10 +65,13 @@ angular.module("workshop.PouchDBTest.directives", [])
         "workshop.PouchDBTest.services.JournalEntryFactory",
         "workshop.PouchDBTest.services.TaskFactory",
         "workshop.PouchDBTest.services.QuestService",
-        function($scope, $sanitize, JournalEntryFactory, TaskFactory, QuestService){
+        "workshop.PouchDBTest.services.DBService",
+        function($scope, $sanitize, JournalEntryFactory, 
+            TaskFactory, QuestService, DBService){
 
             // fields
             $scope.writeLock = {writing: false};
+            $scope.currentTaskSorting = "DATE_ASC";
             // END: fields
 
             // methods
@@ -91,6 +94,33 @@ angular.module("workshop.PouchDBTest.directives", [])
             $scope.removeTask = function(task_vm){
                 $scope.quest.removeTask(task_vm);
             }
+
+            $scope.sortTasks = function(sort_criteria){
+                switch(sort_criteria){
+                    case DBService.sort_criteria.DATE_ASC:
+                        $scope.currentTaskSorting = DBService.sort_criteria.DATE_ASC;
+                        $scope.quest.sortTasks(function(task1, task2){
+                            return new Date(task2.created_at) - new Date(task1.created_at);
+                        });
+                        break;
+                    case DBService.sort_criteria.DATE_DESC:
+                        $scope.currentTaskSorting = DBService.sort_criteria.DATE_DESC;
+                        $scope.quest.sortTasks(function(task1, task2){
+                            return new Date(task1.created_at) - new Date(task2.created_at);
+                        });
+                        break;
+                    default:
+                        throw "sort criterium " + sort_criteria + " not supported";
+                }
+            }
+
+            $scope.sortTasksDateToggle = function(){
+                if($scope.currentTaskSorting == DBService.sort_criteria.DATE_ASC)
+                    $scope.sortTasks(DBService.sort_criteria.DATE_DESC);
+                else 
+                    $scope.sortTasks(DBService.sort_criteria.DATE_ASC);
+            }
+
             // END: methods
 
             // events
