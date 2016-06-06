@@ -1,4 +1,8 @@
 /** COMMON **/
+body, pre {
+	font-family: 'Roboto', sans-serif;
+}
+
 button {
 	border: 0;
 	padding: 0.5em 1em;
@@ -136,13 +140,29 @@ article.quest header {
 }
 
 article.quest section.description {
-	padding: 10px 1em;
-
+	padding: 0;
 	background-color: #D5C77D;
 }
 
+article.quest section.description header {
+	padding-bottom: 0.25em;
+
+	background-color: transparent;
+	color: black;
+}
+
 article.quest section.description .text {
-	padding-left: 2em;
+	padding-bottom: 0.5em;
+}
+
+article.quest section.description .text pre {
+	overflow: hidden;
+
+	margin: 0;
+	padding: 0 0.5em 0 2em;
+
+	line-height: 1.2em;
+	height: 3.6em; /** = 1.2 * 3 **/
 }
 
 article.quest section.metadata dl {
@@ -189,6 +209,10 @@ article.quest section.journal article.journal-entry .refid {
 }
 article.quest section.journal article.journal-entry .text {
 	padding-left: 0.5em;
+}
+
+article.quest section.tasks {
+	background-color: #D5C77D;
 }
 
 article.quest section.tasks header {

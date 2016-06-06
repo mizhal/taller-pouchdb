@@ -3,8 +3,10 @@
 		<h2>#{{quest.data.shortUuid}} {{quest.data.name}}</h2>
 	</header>
 	<section class="description">
-		<h3>DESC:</h3>
-		<div class="text" ng-bind-html="quest.data.description"></div>
+		<header>
+			<h3>DESC:</h3>
+		</header>
+		<div class="text"><pre ng-bind-html="quest.data.description"></pre></div>
 	</section>
 	<div class="row">
 		<section class="metadata">
