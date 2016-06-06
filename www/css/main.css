@@ -36,6 +36,10 @@ header {
 .header-button {
 	padding: 1em;
 }
+
+.mright1 {
+	margin-right: 0.25em;
+}
 /** END: COMMON **/;
 
 /** MASTER-DETAIL TEMPLATE **/
@@ -184,12 +188,13 @@ article.quest section.tasks .toolbar {
 
 /** QUEST-TASK **/
 article.quest article.task {
+	position: relative;
 	padding: 0.5em 1em;
 }
 
 article.quest article.task h3 a.status-button {
-	margin: 0.5em 1em 0.5em 0.5em;
-	padding: 5px 10px;
+	margin: 0.5em 1em 0.5em 0;
+	padding: 2px 5px;
 	border-radius: 3px;
 }
 
