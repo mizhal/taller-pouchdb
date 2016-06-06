@@ -21,7 +21,7 @@ var app = angular.module("workshop.PouchDBTest", [
 	.state("app", {
 		url: "/app",
 		abstract: true,
-		templateUrl: "templates/master-slave.html",
+		templateUrl: "templates/master-detail.html",
 		controller: "workshop.PouchDBTest.controllers.MainController"
 	})
 

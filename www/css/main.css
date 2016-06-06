@@ -38,16 +38,16 @@ header {
 }
 /** END: COMMON **/;
 
-/** MASTER-SLAVE TEMPLATE **/
-.master-slave .frame {
+/** MASTER-DETAIL TEMPLATE **/
+.master-detail .frame {
 	border: 2px solid black;
 }
 
-.master-slave .left .toolbar button {
+.master-detail .left .toolbar button {
 	width: 100%;
 }
 
-.master-slave .left a {
+.master-detail .left a {
 	display: block;
 }
 
