@@ -20,9 +20,11 @@
 				<h3>JOURNAL:</h3>
 				<button class="right-button header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="writeJournal()">Escribir</button>
 			</header>
-			<div class="journal-list">
-				<journal-entry entry="entry" write-lock="writeLock" ng-repeat="entry in quest.journal"/>
-			</div>
+			<ul class="journal">
+				<li ng-repeat="entry in quest.journal">
+					<journal-entry entry="entry" write-lock="writeLock" />
+				</li>
+			</ul>
 		</section>
 		<section class="tasks col-50">
 			<header>
@@ -32,9 +34,11 @@
 					<button class="header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addTask()">Nueva Tarea</button>
 				</div>
 			</header>
-			<div class="task-list">
-				<quest-task task="task" quest="quest" write-lock="writeLock" ng-repeat="task in quest.tasks"/>
-			</div>
+			<ul class="tasks">
+				<li ng-repeat="task in quest.tasks">
+					<quest-task task="task" quest="quest" write-lock="writeLock" />
+				</li>
+			</ul>
 		</section>
 	</div>
 </article>

@@ -110,6 +110,21 @@ article.journal-entry textarea {
 /** END: JOURNAL EMBEDDED ENTRIES **/
 
 /** QUEST-DETAIL **/
+article.quest ul {
+	margin: 0;
+	padding: 0;
+
+	list-style-type: none;
+
+	height: 200px;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+article.quest ul li {
+	list-style: none;
+}
+
 article.quest h2, article.quest h3, article.quest h4, article.quest h5 {
 	margin: 0;
 }
