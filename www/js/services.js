@@ -52,6 +52,18 @@ angular.module("workshop.PouchDBTest.services", [])
 		this.destroy = function(object){
 			return self.Pouch.remove(object);
 		};
+
+		this.checkDBViews = function(views){
+			for(var i in views){
+				self.save(views[i])
+					.catch(function(error){
+						if(error.name != "conflict")
+						{
+							console.log(error);
+						} // else: conflict means view already exists
+					});
+			}
+		}
 	}
 ])
 
@@ -337,14 +349,6 @@ angular.module("workshop.PouchDBTest.services", [])
 		/** END: PUBLIC **/
 
 		/** PRIVATE **/
-		var CheckDBViews = function(){
-			for(var i in self.views){
-				DBService.get(self.views[i]._id)
-					.catch(function(error){
-						DBService.save(self.views[i]);
-					});
-			}
-		}
 		/** END: PRIVATE **/
 
 		/** VIEWS & INDICES **/
@@ -381,7 +385,7 @@ angular.module("workshop.PouchDBTest.services", [])
 
 
 		/** init **/
-		CheckDBViews();
+		DBService.checkDBViews(this.views);
 		/** END: init **/
 
 	}
