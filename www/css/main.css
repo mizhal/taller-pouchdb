@@ -231,13 +231,13 @@ article.quest article.task {
 	padding: 0.5em 1em;
 }
 
-article.quest article.task h3 a.status-button {
+article.quest article.task h4 a.status-button {
 	margin: 0.5em 1em 0.5em 0;
 	padding: 2px 5px;
 	border-radius: 3px;
 }
 
-article.quest article.task h3 a.status-button.TODO {
+article.quest article.task h4 a.status-button.TODO {
 	background-color: #613675;
 	color: white;
 }

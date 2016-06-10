@@ -197,4 +197,42 @@ angular.module("workshop.PouchDBTest.directives", [])
     }
 })
 
+.directive("questAttachment", function(){
+
+    var controller = [
+
+    ];
+
+    return {
+        restrict: "E",
+        scope: {
+            attachment: "=",
+            quest: "=",
+            writeLock: "="
+        },
+        replace: true,
+        controller: controller,
+        templateUrl: "directives/quest-attachment.html"
+    }
+})
+
+.directive("questReference", function(){
+
+    var controller = [
+
+    ];
+
+    return {
+        restrict: "E",
+        scope: {
+            reference: "=",
+            quest: "=",
+            writeLock: "="
+        },
+        replace: true,
+        controller: controller,
+        templateUrl: "directives/quest-reference.html"
+    }
+})
+
 ;

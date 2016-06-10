@@ -33,12 +33,37 @@
 				<h3>TRACK:</h3>
 				<div class="right-button">
 					<button class="header-button" ng-click="sortTasksDateToggle()">Por Fecha:</button>
-					<button class="header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addTask()">Nueva Tarea</button>
+					<button class="header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addTask()">Nueva</button>
 				</div>
 			</header>
 			<ul class="tasks">
 				<li ng-repeat="task in quest.tasks">
 					<quest-task task="task" quest="quest" write-lock="writeLock" />
+				</li>
+			</ul>
+		</section>
+	</div>
+	<div class="row">
+		<section class="references col-50">
+			<header>
+				<h3>REFS:</h3>
+				<div class="right-button">
+					<button class="header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addReference()">Nueva</button>
+				</div>
+			</header>
+			<ul class="references">
+				<li ng-repeat="ref in quest.references">
+					<quest-reference reference="ref" quest="quest" write-lock="writeLock" />
+				</li>
+			</ul>
+		</section>
+		<section class="attachments col-50">
+			<header>
+				<h3>FILES:</h3>
+			</header>
+			<ul class="files">
+				<li ng-repeat="file in quest.attachments">
+					<quest-attachment attachment="file" quest="quest" write-lock="writeLock" />
 				</li>
 			</ul>
 		</section>

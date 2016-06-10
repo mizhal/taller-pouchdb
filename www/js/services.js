@@ -149,6 +149,8 @@ angular.module("workshop.PouchDBTest.services", [])
 			proto.desc = desc;
 			proto.journal = [];
 			proto.tasks = []; // nested
+			proto.files = [];
+			proto.references = [];
 			// END: fields
 
 			return proto;
@@ -202,6 +204,26 @@ angular.module("workshop.PouchDBTest.services", [])
 			proto.done_datetime = null;
 			proto.delegated_to_contact_id = null;
 			proto.explanations_notes = null;
+
+			return proto;
+		}
+	}
+])
+
+.service("workshop.PouchDBTest.services.ReferenceFactory", 
+[
+	"workshop.PouchDBTest.services.HasTimestampFactory",
+	function(HasTimestampFactory) {
+		var self = this;
+		this.type = "Reference";
+
+		this._new = function(name, link){
+			var proto = HasTimestampFactory._new();
+
+			proto.type = self.type;
+			proto.parent = parent_quest._id;
+			proto.name = name;
+			proto.link = link;
 
 			return proto;
 		}

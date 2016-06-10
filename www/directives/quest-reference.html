@@ -1,0 +1,22 @@
+<article class="reference">
+	<header>
+		<h4><span class="refid">#{{reference.data.shortUuid }} :</span> {{reference.data.name}}</h4>
+		<div class="right-button">
+			<button ng-if="!entry.editing" ng-click="edit()" class="header-button">Editar</button>
+			<button ng-if="entry.editing" ng-click="save()" class="header-button">Guardar</button>
+		</div>
+	</header>
+	<div ng-if="!reference.editing" class="body">
+		<span ng-if="reference.data.link" class="link">{{reference.data.link}}</span>
+	</div>
+	<div ng-if="reference.editing" class="form">
+		<div class="row">
+			<label class="col-20">Título:</label>
+			<input type="text" ng-model="reference.data.name" />		
+		</div>
+		<div class="row">
+			<label class="col-20">Link:</label>
+			<input type="text" ng-model="reference.data.link" />
+		</div>
+	</div>
+</article>
