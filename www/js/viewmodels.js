@@ -77,8 +77,6 @@ function QuestViewModel(quest, journal_entries){
 	this.removeReference = function(reference_vm) {
 		var indx = self.references.indexOf(reference_vm);
 		self.references.splice(indx, 1);
-		indx = self.data.references.indexOf(reference_vm.data);
-		self.data.references.splice(indx, 1);
 		indx = self.data.reference_ids.indexOf(reference_vm.data._id);
 		self.data.reference_ids.splice(indx, 1);
 	}
