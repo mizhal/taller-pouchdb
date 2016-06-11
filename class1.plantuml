@@ -1,0 +1,5 @@
+@startuml
+Quest "1" o--> "*" JournalEntry
+Quest "1" *--> "*" Task
+Quest "*" -- "*" Reference
+@enduml

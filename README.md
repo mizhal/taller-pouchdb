@@ -15,3 +15,9 @@ The application-features I want to try are:
 * [TODO] Write a journal inside the quest.
 * [TODO] Show all journal entries by date despite of which quest contains them.
 * [TODO] Sync with CouchDB server back and forth.
+
+# Model
+
+![Model](./class-1.png)
+
+The problem is interesting because it has an inlined 1:N relationship, a shared 1:N relationship and an N:M relationship, so it moreover covers any building block of data modelling with PouchDB.
