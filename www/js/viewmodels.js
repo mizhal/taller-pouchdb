@@ -7,8 +7,8 @@
 	the start.
 **/
 
-function EntryViewModel(entry, editing, cancellable){
-    this.data = entry;
+function EditableViewModel(data, editing, cancellable){
+    this.data = data;
     this.editing = editing || false;
     this.cancellable = cancellable || false;
 }
@@ -19,15 +19,23 @@ function QuestViewModel(quest, journal_entries){
 	this.data = quest;
 	this.data.journal = [];
 	this.journal = journal_entries.map(function(entry){
-		return new EntryViewModel(entry);
-	});
-	this.tasks = quest.tasks.map(function(task){
-		return new TaskViewModel(task);
+		return new EditableViewModel(entry);
 	});
 
+	this.tasks = quest.tasks.map(function(task){
+		return new EditableViewModel(task);
+	});
+
+	this.references = quest.references.map(function(ref){
+		return new EditableViewModel(ref);
+	})
+
+	quest.references = [];
+
+	// methods 
 	this.addTask = function(task_data){
 		self.data.tasks.push(task_data);
-		var vm = new TaskViewModel(task_data);
+		var vm = new EditableViewModel(task_data);
 		self.tasks.push(vm);
 		return vm;
 	};
@@ -48,13 +56,31 @@ function QuestViewModel(quest, journal_entries){
 			seem very performant.
 		**/
 		self.tasks = self.data.tasks.map(function(task){
-			return new TaskViewModel(task);
+			return new EditableViewModel(task);
 		});
 	}
-}
 
-function TaskViewModel(task, editing, cancellable) {
-	this.data = task;
-	this.editing = editing || false;
-	this.cancellable = cancellable || false;
+	this.addReference = function(reference_data) {
+		// Quest x Reference is a N:M relationship
+		// so we have to use a mixed strategy: save references as documents
+		// like we did with journal entries but also save reference ids as
+		// nested list inside quest document.
+		// Later we will have to provide a mechanism to search and attach
+		// already defined references (defined in another quest, for example)
+		// something like "this url is already known" when user types link.
+		self.data.reference_ids.push(reference_data._id);
+		var vm = new EditableViewModel(reference_data);
+		self.references.push(vm);
+		return vm;
+	}
+
+	this.removeReference = function(reference_vm) {
+		var indx = self.references.indexOf(reference_vm);
+		self.references.splice(indx, 1);
+		indx = self.data.references.indexOf(reference_vm.data);
+		self.data.references.splice(indx, 1);
+		indx = self.data.reference_ids.indexOf(reference_vm.data._id);
+		self.data.reference_ids.splice(indx, 1);
+	}
+	// END: methods
 }

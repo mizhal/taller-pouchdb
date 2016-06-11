@@ -151,6 +151,7 @@ angular.module("workshop.PouchDBTest.services", [])
 			proto.tasks = []; // nested
 			proto.files = [];
 			proto.references = [];
+			proto.reference_ids = []; // nested
 			// END: fields
 
 			return proto;
@@ -221,7 +222,7 @@ angular.module("workshop.PouchDBTest.services", [])
 			var proto = HasTimestampFactory._new();
 
 			proto.type = self.type;
-			proto.parent = parent_quest._id;
+			proto._id = self.type + "#" + proto.uuid;
 			proto.name = name;
 			proto.link = link;
 
@@ -242,7 +243,8 @@ angular.module("workshop.PouchDBTest.services", [])
 	"workshop.PouchDBTest.services.DBService",
 	"workshop.PouchDBTest.services.QuestFactory",
 	"workshop.PouchDBTest.services.JournalEntryFactory",
-	function(DBService, QuestFactory, JournalEntryFactory){
+	"workshop.PouchDBTest.services.ReferenceFactory",
+	function(DBService, QuestFactory, JournalEntryFactory, ReferenceFactory){
 		var self = this;
 
 		this.constants = {
@@ -256,12 +258,14 @@ angular.module("workshop.PouchDBTest.services", [])
 		this.sort_criteria_params_for_journal = {
 			DATE_DESC: function(_id){
 				return {
+					include_docs: true,
 					endkey: [_id], startkey: [_id, {}, {}],
 					descending: true,
 				}
 			},
 			DATE_ASC: function(_id) { 
 				return {
+					include_docs: true,
 					startkey: [_id], endkey: [_id, {}, {}],
 					descending: false,
 				}
@@ -276,11 +280,13 @@ angular.module("workshop.PouchDBTest.services", [])
 		this.sort_criteria_params_for_quests = {
 			DATE_DESC: function(){
 				return {
+					include_docs: true,
 					descending: true,
 				}
 			},
 			DATE_ASC: function() { 
 				return {
+					include_docs: true,
 					descending: false,
 				}
 			}
@@ -324,7 +330,7 @@ angular.module("workshop.PouchDBTest.services", [])
 				})
 		}
 
-		this.getWithJournalEntries = function(_id, sort_criteria = "DATE_DESC"){
+		this.getWithDependentObjects = function(_id, sort_criteria = "DATE_DESC"){
 
 			var sort_params = DBService.prepareSortParams(
 				_id, 
@@ -336,18 +342,21 @@ angular.module("workshop.PouchDBTest.services", [])
 			return DBService.queryView(sort_view, sort_params)
 			 	.then(function(res){
 			 		var entries = [];
-			 		var object = null;
+			 		var references = [];
+			 		var object = {};
+
 			 		for(var i in res.rows){
 			 			var row = res.rows[i];
-			 			if(row.key[self.constants.DISCRIMINATOR] == QuestFactory.type){
-			 				object = row.value;
-			 			} 
+			 			if(row.key[self.constants.DISCRIMINATOR] == QuestFactory.type)
+			 				object = row.doc;
 			 			else if (row.key[self.constants.DISCRIMINATOR] == JournalEntryFactory.type)
-			 			{
-			 				entries.push(row.value);
-			 			}
+			 				entries.push(row.doc);
+			 			else if (row.key[self.constants.DISCRIMINATOR] == ReferenceFactory.type)
+			 				references.push(row.doc);
 			 		}
 			 		object.journal = entries;
+			 		object.references = references;
+
 			 		return object;
 				})
 				.catch(function(error){
@@ -380,13 +389,22 @@ angular.module("workshop.PouchDBTest.services", [])
 			views: {
 				by_date: {
 					map: function(doc) {
-						if(doc.type == "$$1")
-							emit([doc._id, doc.type, 0], doc);
+						if(doc.type == "$$1") {
+							emit([doc._id, doc.type, 0]);
+							// linked documents: the references
+							for(var index = 0; index < doc.reference_ids.length; index++){
+								emit(
+									[doc._id, "$$3", index + 1], 
+									{_id: doc.reference_ids[index]}
+								);
+							}
+						}
 						else if (doc.type == "$$2")
-							emit([doc.parent, doc.type, doc.created_at], doc);
+							emit([doc.parent, doc.type, doc.created_at]);
 					}.toString()
 						.replace("$$1", QuestFactory.type)
 						.replace("$$2", JournalEntryFactory.type)
+						.replace("$$3", ReferenceFactory.type)
 				}
 			}
 		}
@@ -397,7 +415,7 @@ angular.module("workshop.PouchDBTest.services", [])
 				by_date: {
 					map: function(doc){
 						if(doc.type == "$$1")
-							emit(doc.created_at, doc);
+							emit(doc.created_at);
 					}.toString()
 						.replace("$$1", QuestFactory.type)
 				}

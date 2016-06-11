@@ -29,14 +29,14 @@ angular.module("workshop.PouchDBTest.directives", [])
             $scope.cancel = function(){
                 $scope.entry.editing = false;
                 $scope.writeLock.writing = false;
-                $rootScope.$broadcast("journal-entry-cancelled");
+                $rootScope.$broadcast("sub-item-cancelled");
             }
 
             $scope.destroy = function(){
                 DBService.destroy($scope.entry.data)
                     .then(function(){
                         $scope.entry.cancellable = true;
-                        $rootScope.$broadcast("journal-entry-cancelled");           
+                        $rootScope.$broadcast("sub-item-cancelled");           
                     })
             }
             // END: methods
@@ -48,7 +48,7 @@ angular.module("workshop.PouchDBTest.directives", [])
     return {
         restrict: "E",
         scope: {
-            entry: "=", // :EntryViewModel
+            entry: "=",
             writeLock: "="
         },
         replace: true,
@@ -64,10 +64,13 @@ angular.module("workshop.PouchDBTest.directives", [])
         "$sanitize",
         "workshop.PouchDBTest.services.JournalEntryFactory",
         "workshop.PouchDBTest.services.TaskFactory",
+        "workshop.PouchDBTest.services.ReferenceFactory",
         "workshop.PouchDBTest.services.QuestService",
         "workshop.PouchDBTest.services.DBService",
         function($scope, $sanitize, JournalEntryFactory, 
-            TaskFactory, QuestService, DBService){
+            TaskFactory, ReferenceFactory,
+            QuestService, 
+            DBService){
 
             // fields
             $scope.writeLock = {writing: false};
@@ -78,7 +81,7 @@ angular.module("workshop.PouchDBTest.directives", [])
             $scope.writeJournal = function(){
                 var text = $sanitize('Lorem <a href="#">ipsum</a>');
                 var entry = JournalEntryFactory._new(text, $scope.quest.data);
-                var entry_viewmodel = new EntryViewModel(entry, true, true);
+                var entry_viewmodel = new EditableViewModel(entry, true, true);
                 $scope.quest.journal.unshift(entry_viewmodel);
                 $scope.writeLock.writing = true;
             }
@@ -123,13 +126,24 @@ angular.module("workshop.PouchDBTest.directives", [])
                     $scope.sortTasks(DBService.sort_criteria.DATE_ASC);
             }
 
+            $scope.addReference = function(){
+                var title = "Lorem ipsum";
+                var ref = ReferenceFactory._new(title);
+                var vm = $scope.quest.addReference(ref);
+                vm.editing = true;
+                $scope.writeLock.writing = true;
+            }
+
             // END: methods
 
             // events
-            $scope.$on("journal-entry-cancelled", function(){
+            $scope.$on("sub-item-cancelled", function(){
                 $scope.quest.journal = $scope.quest.journal.filter(function(obj){
                     return !obj.cancellable;
                 });
+                $scope.quest.references = $scope.quest.references.filter(function(obj){
+                    return !obj.cancellable;
+                })
                 $scope.$apply();
             })
 
@@ -200,7 +214,14 @@ angular.module("workshop.PouchDBTest.directives", [])
 .directive("questAttachment", function(){
 
     var controller = [
+        "$scope",
+        "$rootScope",
+        "workshop.PouchDBTest.services.DBService",
+        function($scope, $rootScope, DBService) {
+            $scope.save = function(){
 
+            }
+        }
     ];
 
     return {
@@ -219,7 +240,49 @@ angular.module("workshop.PouchDBTest.directives", [])
 .directive("questReference", function(){
 
     var controller = [
+        "$scope",
+        "$rootScope",
+        "workshop.PouchDBTest.services.DBService",
+        function($scope, $rootScope, DBService) {
+            var self = this;
 
+            // methods
+            $scope.save = function(){
+
+                DBService.save($scope.reference.data)
+                    .then(function(doc){
+                        $scope.reference.editing = false;
+                        $scope.reference.cancellable = false;
+                        $scope.writeLock.writing = false;
+                        $scope.$apply();
+
+                        $scope.$emit("quest-nested-object-changed");
+                    });
+
+            }
+
+            $scope.edit = function(){
+                if ($scope.writeLock.writing) 
+                    return;
+                $scope.reference.editing = true;
+                $scope.writeLock.writing = true;
+            }
+
+            $scope.cancel = function(){
+                $scope.reference.editing = false;
+                $scope.writeLock.writing = false;
+                $rootScope.$broadcast("sub-item-cancelled");
+            }
+
+            $scope.destroy = function(){
+                DBService.destroy($scope.reference.data)
+                    .then(function(){
+                        $scope.reference.cancellable = true;
+                        $rootScope.$broadcast("sub-item-cancelled");           
+                    })
+            }
+            // END: methods
+        }
     ];
 
     return {

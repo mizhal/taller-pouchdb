@@ -83,12 +83,11 @@ angular.module("workshop.PouchDBTest.controllers", [])
 
 		// init 
 		if($stateParams.id) {
-			QuestService.getWithJournalEntries($stateParams.id, "DATE_ASC")
+			QuestService.getWithDependentObjects($stateParams.id, "DATE_ASC")
 				.then(function(doc){
 					if (!doc) {
-						$state.go("app.quests");
 						console.log("Error recovering document: " + $stateParams.id);
-						return;
+						$state.go("app.quests");
 					}
 					$scope.quest = new QuestViewModel(doc, doc.journal);
 					$scope.$apply();

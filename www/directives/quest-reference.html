@@ -2,8 +2,8 @@
 	<header>
 		<h4><span class="refid">#{{reference.data.shortUuid }} :</span> {{reference.data.name}}</h4>
 		<div class="right-button">
-			<button ng-if="!entry.editing" ng-click="edit()" class="header-button">Editar</button>
-			<button ng-if="entry.editing" ng-click="save()" class="header-button">Guardar</button>
+			<button ng-if="!reference.editing" ng-click="edit()" class="header-button">Editar</button>
+			<button ng-if="reference.editing" ng-click="save()" class="header-button">Guardar</button>
 		</div>
 	</header>
 	<div ng-if="!reference.editing" class="body">
