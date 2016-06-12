@@ -19,5 +19,18 @@
   "dependencies": {
     "connect": "^3.4.1",
     "serve-static": "^1.10.2"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-cli": "^1.0.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.7",
+    "protractor": "~2.5.1",
+    "protractor-cucumber": "^0.1.8"
   }
 }

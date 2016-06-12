@@ -6,6 +6,8 @@ angular.module("workshop.PouchDBTest.services", [])
 	function($q){
 		var self = this;
 
+		this.dbname = "test";
+
 		/** SORTING PROTOCOL **/
 		this.sort_criteria = {
 			DATE_DESC: "DATE_DESC",
@@ -25,7 +27,7 @@ angular.module("workshop.PouchDBTest.services", [])
 		}
 		/** END: SORTING PROTOCOL **/
 
-		this.Pouch = new PouchDB("test"); // size limits ignored as of now for sanity sake
+		this.Pouch = new PouchDB(this.dbname); // size limits ignored as of now for sanity sake
 
 		this.save = function(object) {
 			object.updated_at = new Date();
@@ -34,11 +36,11 @@ angular.module("workshop.PouchDBTest.services", [])
 					object._rev = docsum.rev;
 					return docsum;
 				});
-		};
+		}
 
 		this.get = function(_id){
 			return self.Pouch.get(_id);
-		};
+		}
 
 		this.queryView = function(view, options){
 			options = options || {};
@@ -50,8 +52,27 @@ angular.module("workshop.PouchDBTest.services", [])
 		}
 
 		this.destroy = function(object){
-			return self.Pouch.remove(object);
-		};
+			return self.Pouch.remove(object._id, object._rev);
+		}
+
+		this.destroyIds = function(id, rev){
+			return self.Pouch.remove(id, rev);
+		}
+
+		this.clear = function(){
+			return self.Pouch.allDocs()
+				.then(function(result){
+						var rows = result.rows.filter(function(row){
+							return row.id.indexOf("_design/") != 0;
+						})
+						var promises = rows.map(function(row){
+							return self.destroyIds(row.id, row.value.rev);
+						})
+
+						return Promise.all(promises).then(function() { return; })
+					}
+				)
+		}
 
 		this.checkDBViews = function(views){
 			for(var i in views){
@@ -335,7 +356,9 @@ angular.module("workshop.PouchDBTest.services", [])
 				})
 		}
 
-		this.getWithDependentObjects = function(_id, sort_criteria = "DATE_DESC"){
+		this.getWithDependentObjects = function(_id, sort_criteria){
+
+			sort_criteria = sort_criteria || "DATE_DESC";
 
 			var sort_params = DBService.prepareSortParams(
 				_id, 

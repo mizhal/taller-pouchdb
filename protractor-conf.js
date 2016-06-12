@@ -1,6 +1,6 @@
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: [
-  	"spec/quest-crud.js"
+  	"spec/end-to-end/quest-crud.js"
   ]
 };
