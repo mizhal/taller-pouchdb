@@ -313,7 +313,12 @@ angular.module("workshop.PouchDBTest.services", [])
 			);
 			var sort_view = self.sort_criteria_views_for_quests[sort_criteria];
 
-			return DBService.queryView(sort_view, sort_params);
+			return DBService.queryView(sort_view, sort_params)
+				.then(function(response){
+					return response.rows.map(function(res){
+						return res.doc;
+					});
+				});
 		}
 
 		this.getFirstId = function(){

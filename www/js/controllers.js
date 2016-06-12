@@ -17,8 +17,8 @@ angular.module("workshop.PouchDBTest.controllers", [])
 			QuestService.all("DATE_ASC")
 			.then(function(response){
 				$scope.quests = [];
-				response.rows.map(function(row){
-					$scope.quests.push(row.value);
+				response.map(function(row){
+					$scope.quests.push(row);
 				});
 				$scope.$apply();
 			})
