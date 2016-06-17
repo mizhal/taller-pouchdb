@@ -1,17 +1,18 @@
 <article class="journal-entry">
     <!-- model = EntryViewModel -->
     <div class="content">
-        <span class="refid">#{{entry.data.shortUuid }} :</span>
-        <span class="date">{{entry.data.created_at | date : 'dd-MM-yy hh:mm'}}</span>
+        <header ng-dblclick="edit()">
+            <span class="refid">#{{entry.data.shortUuid }} :</span>
+            <span class="date">{{entry.data.created_at | date : 'dd-MM-yy hh:mm'}}</span>
+        </header>
         <div class="text">
             <p ng-if="!entry.editing" ng-bind-html="entry.data.text"></p>
             <textarea ng-if="entry.editing" ng-model="entry.data.text"></textarea>
         </div>
     </div>
-    <div class="toolbar right">
-        <button ng-if="!entry.editing" ng-click="edit()">Editar</button>
+    <div ng-if="entry.editing" class="toolbar right">
         <button ng-if="entry.editing" ng-click="save()">Guardar</button>
         <button ng-if="entry.editing && entry.cancellable" ng-click="cancel()">Cancelar</button>
-        <button ng-if="!entry.editing" ng-click="destroy()">Borrar</button>
+        <button ng-if="entry.editing && !entry.cancellable" ng-click="destroy()">Borrar</button>
     </div>
 </article>

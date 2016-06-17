@@ -1,10 +1,6 @@
 <article class="reference">
-	<header>
+	<header ng-dblclick="edit()">
 		<h4><span class="refid">#{{reference.data.shortUuid }} :</span> {{reference.data.name}}</h4>
-		<div class="right-button">
-			<button ng-if="!reference.editing" ng-click="edit()" class="header-button">Editar</button>
-			<button ng-if="reference.editing" ng-click="save()" class="header-button">Guardar</button>
-		</div>
 	</header>
 	<div ng-if="!reference.editing" class="body">
 		<span ng-if="reference.data.link" class="link">{{reference.data.link}}</span>
@@ -17,6 +13,9 @@
 		<div class="row">
 			<label class="col-20">Link:</label>
 			<input type="text" ng-model="reference.data.link" />
+		</div>
+		<div class="toolbar right">
+			<button ng-if="reference.editing" ng-click="save()" class="header-button">Guardar</button>
 		</div>
 	</div>
 </article>
