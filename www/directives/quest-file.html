@@ -1,0 +1,20 @@
+<article class="file">
+	<header ng-dblclick="edit()">
+		<h4><span class="refid">#{{file.data.shortUuid}}:</span> {{file.data.name}}</h4>
+	</header>
+	<div class="body">
+	</div>
+	<div ng-if="file.editing" class="form">
+		<div class="row">
+			<label class="col-20">Nombre:</label>
+			<input type="text" ng-model="file.data.name" />
+		</div>
+		<div class="row">
+			<label class="col-20">Archivo:</label>
+			<input type="file" name="file" file-attachment file-data="file.data" />
+		</div>
+		<div class="toolbar right">
+			<button ng-click="save()" class="header-button">Guardar</button>
+		</div>
+	</div>
+</article>

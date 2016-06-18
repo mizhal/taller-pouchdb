@@ -133,6 +133,13 @@ angular.module("workshop.PouchDBTest.services", [])
 	}
 ])
 
+
+/** Factories manage creation of pouchdb-compatible objects.
+They also provide a simple inheritance mechanism (invoking "parent" factories)
+and should keep all class-metadata that is usually got by using language reflection,
+this give us freedom to use all metadata we need to recognize classes al properties
+and adjust behavior. 
+**/
 .service("workshop.PouchDBTest.services.HasTimestampFactory", 
 [
 	"workshop.PouchDBTest.services.UUIDService",
@@ -246,6 +253,30 @@ angular.module("workshop.PouchDBTest.services", [])
 			proto._id = self.type + "#" + proto.uuid;
 			proto.name = name;
 			proto.link = link;
+
+			return proto;
+		}
+	}
+])
+
+.service("workshop.PouchDBTest.services.FileFactory", 
+[
+	"workshop.PouchDBTest.services.HasTimestampFactory",
+	function(HasTimestampFactory){
+		var self = this;
+		this.type = "File";
+
+		this._new = function(name){
+			var proto = HasTimestampFactory._new();
+
+			// fields
+			proto.type = self.type;
+			proto._id = self.type + proto.uuid;
+			proto.name = name;
+			proto.data = null;
+			proto.filetype = null;
+			proto.filename = null;
+			// END: fields
 
 			return proto;
 		}

@@ -30,6 +30,10 @@ function QuestViewModel(quest, journal_entries){
 		return new EditableViewModel(ref);
 	})
 
+	this.files = quest.files.map(function(file){
+		return new EditableViewModel(file);
+	})
+
 	quest.references = [];
 
 	// methods 
@@ -79,6 +83,14 @@ function QuestViewModel(quest, journal_entries){
 		self.references.splice(indx, 1);
 		indx = self.data.reference_ids.indexOf(reference_vm.data._id);
 		self.data.reference_ids.splice(indx, 1);
+	}
+
+	this.addFile = function(file_data) {
+		self.data.files.push(file_data);
+		var vm = new EditableViewModel(file_data);
+		self.files.push(vm);
+
+		return vm;
 	}
 	// END: methods
 }

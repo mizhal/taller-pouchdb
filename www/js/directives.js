@@ -65,11 +65,12 @@ angular.module("workshop.PouchDBTest.directives", [])
         "workshop.PouchDBTest.services.JournalEntryFactory",
         "workshop.PouchDBTest.services.TaskFactory",
         "workshop.PouchDBTest.services.ReferenceFactory",
+        "workshop.PouchDBTest.services.FileFactory",
         "workshop.PouchDBTest.services.QuestService",
         "workshop.PouchDBTest.services.DBService",
         function($scope, $sanitize, JournalEntryFactory, 
-            TaskFactory, ReferenceFactory,
-            QuestService, 
+            TaskFactory, ReferenceFactory, FileFactory,
+            QuestService,
             DBService){
 
             // fields
@@ -132,6 +133,14 @@ angular.module("workshop.PouchDBTest.directives", [])
                 var vm = $scope.quest.addReference(ref);
                 vm.editing = true;
                 $scope.writeLock.writing = true;
+            }
+
+            $scope.addFile = function(){
+                var name = "File...";
+                var file = FileFactory._new();
+                var vm = $scope.quest.addFile(file);
+                vm.editing = true;
+                $scope.writeLock.writing = true;   
             }
 
             // END: methods
@@ -295,6 +304,60 @@ angular.module("workshop.PouchDBTest.directives", [])
         replace: true,
         controller: controller,
         templateUrl: "directives/quest-reference.html"
+    }
+})
+
+.directive("questFile", function(){
+    var controller = [
+        "$scope",
+        "$rootScope",
+        "workshop.PouchDBTest.services.DBService",
+        function($scope, $rootScope, DBService) {
+
+            $scope.save = function(){
+                $scope.file.editing = false;
+                $scope.file.cancellable = false;
+                $scope.writeLock.writing = false;
+
+                $scope.$emit("quest-nested-object-changed");
+            }
+
+            $scope.edit = function(){
+
+            }
+        }
+    ];
+
+    return {
+        restrict: "E",
+        scope: {
+            file: "=",
+            quest: "=",
+            writeLock: "="
+        },
+        replace: true,
+        controller: controller,
+        templateUrl: "directives/quest-file.html"
+    }
+})
+
+.directive("fileAttachment", function(){
+    return {
+        restrict: "A",
+        scope: {
+            data: "=fileData"
+        },
+        link: function(scope, element, attrs){
+            element.bind("change", function(event){
+                var file = event.target.files[0];
+
+                scope.data.data = file;
+                scope.data.filetype = file.type;
+                scope.data.filename = file.name;
+
+                scope.$apply();
+            });
+        }
     }
 })
 

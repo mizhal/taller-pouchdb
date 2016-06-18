@@ -60,10 +60,13 @@
 		<section class="attachments col-50">
 			<header>
 				<h3>FILES:</h3>
+				<div class="right-button">
+					<button class="header-button" ng-class="writeLock.writing ? 'disabled' : ''" ng-click="addFile()">Nueva</button>
+				</div>
 			</header>
 			<ul class="files">
-				<li ng-repeat="file in quest.attachments">
-					<quest-attachment attachment="file" quest="quest" write-lock="writeLock" />
+				<li ng-repeat="file in quest.files">
+					<quest-file file="file" quest="quest" write-lock="writeLock" />
 				</li>
 			</ul>
 		</section>
