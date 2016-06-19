@@ -9,8 +9,9 @@
 			<label class="col-20">Nombre:</label>
 			<input type="text" ng-model="file.data.name" />
 		</div>
-		<div class="row">
-			<label class="col-20">Archivo:</label>
+		<div>
+			<label>Archivo:</label>
+			<div class="filename">{{file.data.filename}}</div>
 			<input type="file" name="file" file-attachment file-data="file.data" />
 		</div>
 		<div class="toolbar right">

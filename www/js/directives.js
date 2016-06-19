@@ -323,7 +323,10 @@ angular.module("workshop.PouchDBTest.directives", [])
             }
 
             $scope.edit = function(){
-
+                if ($scope.writeLock.writing) 
+                    return;
+                $scope.file.editing = true;
+                $scope.writeLock.writing = true;
             }
         }
     ];
