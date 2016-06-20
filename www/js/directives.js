@@ -319,7 +319,10 @@ angular.module("workshop.PouchDBTest.directives", [])
                 $scope.file.cancellable = false;
                 $scope.writeLock.writing = false;
 
-                $scope.$emit("quest-nested-object-changed");
+                DBService.attach($scope.quest.data, $scope.file.data)
+                    .then(function(){
+                        $scope.$emit("quest-nested-object-changed");        
+                    });
             }
 
             $scope.edit = function(){
@@ -355,7 +358,7 @@ angular.module("workshop.PouchDBTest.directives", [])
                 var file = event.target.files[0];
 
                 scope.data.data = file;
-                scope.data.filetype = file.type;
+                scope.data.content_type = file.type;
                 scope.data.filename = file.name;
 
                 scope.$apply();
