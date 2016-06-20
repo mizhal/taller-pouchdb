@@ -81,12 +81,12 @@ angular.module("workshop.PouchDBTest.controllers", [])
 	"$stateParams",
 	function($scope, $rootScope, QuestService, $state, $stateParams){
 
-		// init 
-		if($stateParams.id) {
-			QuestService.getWithDependentObjects($stateParams.id, "DATE_ASC")
+		// methods
+		$scope.load = function(id){
+			QuestService.getWithDependentObjects(id, "DATE_ASC")
 				.then(function(doc){
 					if (!doc) {
-						console.log("Error recovering document: " + $stateParams.id);
+						console.log("Error recovering document: " + id);
 						$state.go("app.quests");
 					}
 					$scope.quest = new QuestViewModel(doc, doc.journal);
@@ -96,9 +96,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 					$state.go("app.quests");
 				});
 		}
-		// END: init
 
-		// methods
 		$scope.edit = function() {
 			$state.go("app.quest-edit", {id: $scope.quest.data._id});
 		};
@@ -111,6 +109,18 @@ angular.module("workshop.PouchDBTest.controllers", [])
 				});
 		}
 		// END: methods
+
+		// events
+		$scope.$on("quest-reload", function(){
+			$scope.load($stateParams.id);
+		});
+		// END: events
+
+		// init 
+		if($stateParams.id) {
+			$scope.load($stateParams.id);
+		}
+		// END: init
 	}
 ])
 

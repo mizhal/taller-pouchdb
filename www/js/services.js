@@ -79,12 +79,14 @@ interface IDocument {
 		}
 
 		this.attach = function(document /* :IDocument */, file_object /* :IFile */) {
-			return self.Pouch.putAttachment(
-					document._id, file_object.name, document._rev,
-					file_object.data, file_object.content_type
-				).then(function(doc){
-					document._rev = doc.rev;
-				});
+			return self.save(document).then(function(){
+				return self.Pouch.putAttachment(
+						document._id, file_object.name, document._rev,
+						file_object.data, file_object.content_type
+					).then(function(doc){
+						document._rev = doc.rev;
+					})			
+				})
 		}
 
 		this.detach = function(id, rev, file_object /* :IFile */){

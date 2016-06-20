@@ -220,32 +220,6 @@ angular.module("workshop.PouchDBTest.directives", [])
     }
 })
 
-.directive("questAttachment", function(){
-
-    var controller = [
-        "$scope",
-        "$rootScope",
-        "workshop.PouchDBTest.services.DBService",
-        function($scope, $rootScope, DBService) {
-            $scope.save = function(){
-
-            }
-        }
-    ];
-
-    return {
-        restrict: "E",
-        scope: {
-            attachment: "=",
-            quest: "=",
-            writeLock: "="
-        },
-        replace: true,
-        controller: controller,
-        templateUrl: "directives/quest-attachment.html"
-    }
-})
-
 .directive("questReference", function(){
 
     var controller = [
@@ -320,8 +294,8 @@ angular.module("workshop.PouchDBTest.directives", [])
                 $scope.writeLock.writing = false;
 
                 DBService.attach($scope.quest.data, $scope.file.data)
-                    .then(function(){
-                        $scope.$emit("quest-nested-object-changed");        
+                    .then(function(res){
+                        $scope.$emit("quest-reload");        
                     });
             }
 
