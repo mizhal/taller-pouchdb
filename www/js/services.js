@@ -1,5 +1,24 @@
 angular.module("workshop.PouchDBTest.services", [])
 
+/** INTERFACES **
+interfaces are not supported by javascript or angular, but they are very useful
+to check/document capabilities expected from parameters of methods and functions
+
+interface IFile {
+	name: string;
+	content_type: string;
+	data: stringBuffer;
+}
+
+interface IDocument {
+	_id: string;
+	_rev: string;
+	updated_at: timestamp;
+	created_at: timestamp;
+}
+
+** END: INTERFACES **/
+
 .service("workshop.PouchDBTest.services.DBService", 
 [
 	"$q",
@@ -29,7 +48,7 @@ angular.module("workshop.PouchDBTest.services", [])
 
 		this.Pouch = new PouchDB(this.dbname); // size limits ignored as of now for sanity sake
 
-		this.save = function(object) {
+		this.save = function(object /* :IDocument */) {
 			object.updated_at = new Date();
 			return self.Pouch.put(object)
 				.then(function(docsum){
@@ -51,12 +70,25 @@ angular.module("workshop.PouchDBTest.services", [])
 			return self.Pouch.query(mapredios);
 		}
 
-		this.destroy = function(object){
+		this.destroy = function(object /* :IDocument */){
 			return self.Pouch.remove(object._id, object._rev);
 		}
 
 		this.destroyIds = function(id, rev){
 			return self.Pouch.remove(id, rev);
+		}
+
+		this.attach = function(document /* :IDocument */, file_object /* :IFile */) {
+			return self.Pouch.putAttachment(
+					document._id, file_object.name, document._rev,
+					file_object.data, file_object.content_type
+				).then(function(doc){
+					document._rev = doc.rev;
+				});
+		}
+
+		this.detach = function(id, rev, file_object /* :IFile */){
+			return self.Pouch.removeAttachment(id, file_object.name, rev);
 		}
 
 		this.clear = function(){
@@ -137,8 +169,8 @@ angular.module("workshop.PouchDBTest.services", [])
 /** Factories manage creation of pouchdb-compatible objects.
 They also provide a simple inheritance mechanism (invoking "parent" factories)
 and should keep all class-metadata that is usually got by using language reflection,
-this give us freedom to use all metadata we need to recognize classes al properties
-and adjust behavior. 
+this give us freedom to use all metadata we need to recognize classes and properties
+and adjust program behavior to them. 
 **/
 .service("workshop.PouchDBTest.services.HasTimestampFactory", 
 [
@@ -264,7 +296,7 @@ and adjust behavior.
 	"workshop.PouchDBTest.services.HasTimestampFactory",
 	function(HasTimestampFactory){
 		var self = this;
-		this.type = "File";
+		this.type = "File"; /** :IFile **/
 
 		this._new = function(name){
 			var proto = HasTimestampFactory._new();
@@ -274,7 +306,7 @@ and adjust behavior.
 			proto._id = self.type + proto.uuid;
 			proto.name = name;
 			proto.data = null;
-			proto.filetype = null;
+			proto.content_type = null;
 			proto.filename = null;
 			// END: fields
 
