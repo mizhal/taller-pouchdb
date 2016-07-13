@@ -18,7 +18,6 @@ function FileViewModel(data, editing, cancellable) {
 	EditableViewModel.call(this, data, editing, cancellable);
 
 	var self = this;
-	this.img_url = null;
 
 	this.isImage = function(){
 		return this.data.content_type && this.data.content_type.startsWith("image/");

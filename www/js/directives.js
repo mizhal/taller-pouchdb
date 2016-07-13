@@ -295,7 +295,7 @@ angular.module("workshop.PouchDBTest.directives", [])
 
                 DBService.attach($scope.quest.data, $scope.file.data)
                     .then(function(res){
-                        $scope.$emit("quest-reload");        
+                        $scope.$emit("quest-reload");  
                     });
             }
 
@@ -306,11 +306,16 @@ angular.module("workshop.PouchDBTest.directives", [])
                 $scope.writeLock.writing = true;
             }
 
-            if($scope.file.isImage()){
-                blobUtil.blobToBase64String($scope.file.data.data).then(function(b64){
-                    $scope.img_url = "data:" + $scope.file.data.content_type + ";base64," + b64;
-                })
+            function showAsIcon(){
+                if($scope.file.isImage()){
+                    blobUtil.blobToBase64String($scope.file.data.data).then(function(b64){
+                        $scope.img_url = "data:" + $scope.file.data.content_type + ";base64," + b64;
+                        $scope.$apply();
+                    })
+                }
             }
+
+            showAsIcon();
         }
     ];
 
