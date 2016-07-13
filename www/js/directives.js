@@ -306,6 +306,13 @@ angular.module("workshop.PouchDBTest.directives", [])
                 $scope.writeLock.writing = true;
             }
 
+            $scope.destroy = function() {
+                $scope.quest.removeFile($scope.file);
+                $rootScope.$broadcast("quest-nested-object-changed");
+                $scope.file.cancellable = false;
+                $scope.writeLock.writing = false;
+            }
+
             function showAsIcon(){
                 if($scope.file.isImage()){
                     blobUtil.blobToBase64String($scope.file.data.data).then(function(b64){

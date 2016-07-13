@@ -103,5 +103,12 @@ function QuestViewModel(quest, journal_entries){
 
 		return vm;
 	}
+
+	this.removeFile = function(file_vm) {
+		var indx = self.files.indexOf(file_vm);
+		self.files.splice(indx, 1);
+		indx = self.data.files.indexOf(file_vm.data._id);
+		self.data.files.splice(indx, 1);
+	}
 	// END: methods
 }
