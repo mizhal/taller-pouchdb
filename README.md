@@ -12,9 +12,10 @@ The application-features I want to try are:
 
 * [DONE] Simple master-detail view with Create and Show
 * [DONE] Add Edit and Delete.
-* [TODO] Write a journal inside the quest.
+* [DONE] Write a journal inside the quest.
+* [DONE] References & attachments.
+* [NEXT] Sync with CouchDB server (or similar) back and forth.
 * [TODO] Show all journal entries by date despite of which quest contains them.
-* [TODO] Sync with CouchDB server back and forth.
 
 # Model
 
