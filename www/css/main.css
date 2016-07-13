@@ -257,17 +257,27 @@ article.quest article.reference .body, article.quest article.reference .form {
 
 /** QUEST FILE **/
 article.quest article.file {
-	clear: both;
+	padding: 0.5em;
 }
 
 article.quest article.file .icon {
 	width: 64px;
 	height: 64px;
 	float: left;
-	margin-left: 1em;
 }
 
 article.quest article.file .icon img {
 	width: 100%;
 }
 /** END: QUEST FILE **/
+
+/** FORMS **/
+article.quest .form {
+	padding: 0.5em;
+}
+
+article.quest .form .row {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+/** END: FORMS **/

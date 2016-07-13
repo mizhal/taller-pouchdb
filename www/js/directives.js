@@ -332,9 +332,8 @@ angular.module("workshop.PouchDBTest.directives", [])
     }
 })
 
-.directive("fileAttachment", [
-    "workshop.PouchDBTest.services.DBService",
-    function(DBService){
+.directive("fileAttachment",
+    function(){
         return {
             restrict: "A",
             scope: {
@@ -353,6 +352,6 @@ angular.module("workshop.PouchDBTest.directives", [])
             }
         }
     }
-])
+)
 
 ;
