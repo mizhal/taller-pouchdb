@@ -305,6 +305,12 @@ angular.module("workshop.PouchDBTest.directives", [])
                 $scope.file.editing = true;
                 $scope.writeLock.writing = true;
             }
+
+            if($scope.file.isImage()){
+                blobUtil.blobToBase64String($scope.file.data.data).then(function(b64){
+                    $scope.img_url = "data:" + $scope.file.data.content_type + ";base64," + b64;
+                })
+            }
         }
     ];
 
@@ -321,24 +327,27 @@ angular.module("workshop.PouchDBTest.directives", [])
     }
 })
 
-.directive("fileAttachment", function(){
-    return {
-        restrict: "A",
-        scope: {
-            data: "=fileData"
-        },
-        link: function(scope, element, attrs){
-            element.bind("change", function(event){
-                var file = event.target.files[0];
+.directive("fileAttachment", [
+    "workshop.PouchDBTest.services.DBService",
+    function(DBService){
+        return {
+            restrict: "A",
+            scope: {
+                data: "=fileData"
+            },
+            link: function(scope, element, attrs){
+                element.bind("change", function(event){
+                    var file = event.target.files[0];
 
-                scope.data.data = file;
-                scope.data.content_type = file.type;
-                scope.data.filename = file.name;
+                    scope.data.data = file;
+                    scope.data.content_type = file.type;
+                    scope.data.filename = file.name;
 
-                scope.$apply();
-            });
+                    scope.$apply();
+                });
+            }
         }
     }
-})
+])
 
 ;

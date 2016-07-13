@@ -58,7 +58,7 @@ interface IDocument {
 		}
 
 		this.get = function(_id){
-			return self.Pouch.get(_id);
+			return self.Pouch.get(_id, {attachments: true});
 		}
 
 		this.queryView = function(view, options){

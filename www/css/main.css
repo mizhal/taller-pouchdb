@@ -254,3 +254,20 @@ article.quest article.reference .body, article.quest article.reference .form {
 	margin-left: 3em;
 }
 /** END: QUEST-TASK **/
+
+/** QUEST FILE **/
+article.quest article.file {
+	clear: both;
+}
+
+article.quest article.file .icon {
+	width: 64px;
+	height: 64px;
+	float: left;
+	margin-left: 1em;
+}
+
+article.quest article.file .icon img {
+	width: 100%;
+}
+/** END: QUEST FILE **/
