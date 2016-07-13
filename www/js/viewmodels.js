@@ -13,6 +13,18 @@ function EditableViewModel(data, editing, cancellable){
     this.cancellable = cancellable || false;
 }
 
+FileViewModel.prototype = new EditableViewModel();
+function FileViewModel(data, editing, cancellable) {
+	EditableViewModel.call(this, data, editing, cancellable);
+
+	var self = this;
+	this.img_url = null;
+
+	this.isImage = function(){
+		return this.data.content_type && this.data.content_type.startsWith("image/");
+	}
+}
+
 function QuestViewModel(quest, journal_entries){
 	var self = this;
 
@@ -31,7 +43,7 @@ function QuestViewModel(quest, journal_entries){
 	})
 
 	this.files = quest.files.map(function(file){
-		return new EditableViewModel(file);
+		return new FileViewModel(file);
 	})
 
 	quest.references = [];
@@ -87,7 +99,7 @@ function QuestViewModel(quest, journal_entries){
 
 	this.addFile = function(file_data) {
 		self.data.files.push(file_data);
-		var vm = new EditableViewModel(file_data);
+		var vm = new FileViewModel(file_data);
 		self.files.push(vm);
 
 		return vm;
