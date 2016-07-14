@@ -317,6 +317,32 @@ and adjust program behavior to them.
 	}
 ])
 
+.service("workshop.PouchDBTest.services.SyncableNodeFactory", [
+	"workshop.PouchDBTest.services.HasTimestampFactory",
+	function(HasTimestampFactory){
+		var self = this;
+		this.type = "SyncableNode";
+
+		this._new = function(name){
+			var proto = HasTimestampFactory._new();
+
+			// fields
+			proto.type = self.type;
+			proto._id = self.type + proto.uuid;
+			proto.name = name;
+			proto.crypted_credentials = null;
+			proto.url = null;
+			proto.is_live = false;
+			proto.last_time_sinced = null;
+			proto.last_time_failed_msg = null;
+			proto.sync_log = [];
+			// END: fields
+
+			return proto;
+		}
+	}
+])
+
 // If I want to avoid to rely in meta-witchcraft to make
 // DB service take into account dependent object models like
 // Rails ActiveRecord, I should use another layer, a service
