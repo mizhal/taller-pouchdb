@@ -561,9 +561,7 @@ and adjust program behavior to them.
 	function(DBService){
 		var self = this;
 
-		var pin;
-
-		function SetPin(p){pin = p + "$$$233422$$$";}
+		// PUBLIC
 
 		this.setPin = function(pin){
 			SetPin(pin);
@@ -587,15 +585,6 @@ and adjust program behavior to them.
 			syncable_node.is_locked = false;
 		}
 
-		function Lock(syncable_node){
-			if(!syncable_node.is_locked)
-				self.lockNode(syncable_node, pin);			
-		}
-
-		function Unlock(syncable_node){
-			self.unlockNode(syncable_node, pin);
-		}
-
 		this.save = function(syncable_node){
 			Lock(syncable_node);
 
@@ -608,6 +597,25 @@ and adjust program behavior to them.
 				return doc;
 			})
 		}
+
+		// END: PUBLIC
+
+		// PRIVATE 
+
+		var pin;
+
+		function Lock(syncable_node){
+			if(!syncable_node.is_locked)
+				self.lockNode(syncable_node, pin);			
+		}
+
+		function Unlock(syncable_node){
+			self.unlockNode(syncable_node, pin);
+		}
+
+		function SetPin(p){pin = p + "$$$233422$$$";}
+
+		// END: PRIVATE
 	}
 ])
 
