@@ -569,14 +569,19 @@ and adjust program behavior to them.
 
 		this.lockNode = function(syncable_node, lock_pin){
 			var data = JSON.stringify({user: syncable_node.user, password: syncable_node.password})
-			syncable_node.crypted_credentials = asmCrypto.AES_CBC.encrypt(data, lock_pin);
+			syncable_node.crypted_credentials = asmCrypto.bytes_to_hex(
+				asmCrypto.AES_CBC.encrypt(data, lock_pin)
+			);
 			delete syncable_node.user;
 			delete syncable_node.password;
 			syncable_node.is_locked = true;
 		}
 
 		this.unlockNode = function(syncable_node, unlock_pin){
-			var user_pass = asmCrypto.AES_CBC.decrypt(syncable_node.crypted_credentials, unlock_pin);
+			var bytes = asmCrypto.hex_to_bytes(
+				syncable_node.crypted_credentials
+			)
+			var user_pass = asmCrypto.bytes_to_string(asmCrypto.AES_CBC.decrypt(bytes, unlock_pin));
 			var data = JSON.parse(user_pass);
 
 			syncable_node.user = data.user;

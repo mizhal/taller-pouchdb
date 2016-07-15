@@ -31,16 +31,27 @@ describe("SyncableNodeService unit test", function(){
 
 	it("works!", function(done){
 		var s = SyncableNodeFactory._new();
+		s.user = "user";
+		s.password = "password";
 		var id = s._id;
 
 		var pin = "1234";
 
 		SyncableNodeService.setPin(pin);
 
-		SyncableNodeService.save(s);
-		var s = SyncableNodeService.get(s);
-
-		done();
+		SyncableNodeService.save(s)
+		.then(function(){
+			return SyncableNodeService.get(id)
+		})
+		.then(function(){
+			done();		
+		})
+		.catch(function(err){
+			console.log(err);
+			done.fail(err);
+		})
+		;
+		
 	})
 
 })
