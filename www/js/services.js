@@ -108,6 +108,10 @@ interface IDocument {
 				)
 		}
 
+		this.sync = function(syncable_node, unlock_pin) {
+
+		}
+
 		this.checkDBViews = function(views){
 			for(var i in views){
 				self.save(views[i])
@@ -336,6 +340,7 @@ and adjust program behavior to them.
 			proto.last_time_sinced = null;
 			proto.last_time_failed_msg = null;
 			proto.sync_log = [];
+			proto.is_locked = false;
 			// END: fields
 
 			return proto;
@@ -547,6 +552,62 @@ and adjust program behavior to them.
 		DBService.checkDBViews(this.views);
 		/** END: init **/
 
+	}
+])
+
+.service("workshop.PouchDBTest.services.SyncableNodeService", 
+[
+	"workshop.PouchDBTest.services.DBService",
+	function(DBService){
+		var self = this;
+
+		var pin;
+
+		function SetPin(p){pin = p + "$$$233422$$$";}
+
+		this.setPin = function(pin){
+			SetPin(pin);
+		}
+
+		this.lockNode = function(syncable_node, lock_pin){
+			var data = JSON.stringify({user: syncable_node.user, password: syncable_node.password})
+			syncable_node.crypted_credentials = asmCrypto.AES_CBC.encrypt(data, lock_pin);
+			delete syncable_node.user;
+			delete syncable_node.password;
+			syncable_node.is_locked = true;
+		}
+
+		this.unlockNode = function(syncable_node, unlock_pin){
+			var user_pass = asmCrypto.AES_CBC.decrypt(syncable_node.crypted_credentials, unlock_pin);
+			var data = JSON.parse(user_pass);
+
+			syncable_node.user = data.user;
+			syncable_node.password = data.password;
+
+			syncable_node.is_locked = false;
+		}
+
+		function Lock(syncable_node){
+			if(!syncable_node.is_locked)
+				self.lockNode(syncable_node, pin);			
+		}
+
+		function Unlock(syncable_node){
+			self.unlockNode(syncable_node, pin);
+		}
+
+		this.save = function(syncable_node){
+			Lock(syncable_node);
+
+			return DBService.save(syncable_node);
+		}
+
+		this.get = function(_id){
+			return DBService.get(_id).then(function(doc){
+				Unlock(doc);
+				return doc;
+			})
+		}
 	}
 ])
 
