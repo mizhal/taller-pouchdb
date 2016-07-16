@@ -35,7 +35,11 @@ describe("DBService unit test", function(){
 
 		DBService.sync(s, {ajax: {withCredentials: false}})
 			.then(function(){
-				done();
+				return DBService.get("test-key-x")
+					.then(function(doc){
+						expect(doc.check).toBe("pandemonium");
+						done();		
+					})
 			})
 			.catch(function(err){
 				done.fail(err);
