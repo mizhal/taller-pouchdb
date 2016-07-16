@@ -108,8 +108,20 @@ interface IDocument {
 				)
 		}
 
-		this.sync = function(syncable_node, unlock_pin) {
+		this.sync = function(syncable_node) {
+			var defer = Promise.defer();
 
+			var remote = new PouchDB(syncable_node.url);
+
+			this.Pouch.sync(remote)
+				.on("complete", function(){
+					defer.resolve();
+				})
+				.on("error", function(error){
+					defer.reject(error);
+				});
+
+			return defer.promise;
 		}
 
 		this.checkDBViews = function(views){
