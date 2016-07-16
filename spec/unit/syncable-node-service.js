@@ -43,11 +43,13 @@ describe("SyncableNodeService unit test", function(){
 		.then(function(){
 			return SyncableNodeService.get(id)
 		})
-		.then(function(){
+		.then(function(syncable_node){
+			expect(syncable_node.user).toBe("user");
+			expect(syncable_node.password).toBe("password");
+
 			done();		
 		})
 		.catch(function(err){
-			console.log(err);
 			done.fail(err);
 		})
 		;
