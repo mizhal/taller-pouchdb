@@ -108,10 +108,10 @@ interface IDocument {
 				)
 		}
 
-		this.sync = function(syncable_node) {
+		this.sync = function(syncable_node, remote_options) {
 			var defer = Promise.defer();
-
-			var remote = new PouchDB(syncable_node.url);
+			
+			var remote = new PouchDB(syncable_node.url, remote_options);
 
 			this.Pouch.sync(remote)
 				.on("complete", function(){

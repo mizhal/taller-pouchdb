@@ -31,9 +31,9 @@ describe("DBService unit test", function(){
 
 	it("syncs with another database", function(done){
 		var s = SyncableNodeFactory._new();
-		s.url = "http://192.168.6.1:8000/db/test";
+		s.url = "http://www.alvi.com:3000/db/test";
 
-		DBService.sync(s)
+		DBService.sync(s, {ajax: {withCredentials: false}})
 			.then(function(){
 				done();
 			})
