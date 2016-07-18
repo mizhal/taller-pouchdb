@@ -30,8 +30,7 @@ describe("DBService unit test", function(){
 	})
 
 	it("syncs with another database", function(done){
-		var s = SyncableNodeFactory._new();
-		s.url = "http://www.alvi.com:3000/db/test";
+		var s = "http://www.alvi.com:3000/db/test";
 
 		DBService.sync(s, {ajax: {withCredentials: false}})
 			.then(function(){
@@ -44,6 +43,29 @@ describe("DBService unit test", function(){
 			.catch(function(err){
 				done.fail(err);
 			})
+		;
+	})
+
+	it("syncs with Cloudant", function(done){
+		var url = "http://www.alvi.com:3000/db/patcharan";
+
+		DBService.sync(url, {ajax: {withCredentials: false}})
+		.then(function(){ // import credentials from credentials database
+			return SyncableNodeService.get({name: "cloudant"})
+		})
+		.then(function(cloudant){
+			return SyncableNodeService.sync(cloudant, {ajax: {withCredentials: false}})	
+		})
+		.then(function(){
+			return DBService.get("cloudant-test-x");
+		})
+		.then(function(doc){
+			expect(doc.check).toBe("pandemonium");
+			done();
+		})
+		.catch(function(err){
+			done.fail(err);
+		})
 		;
 	})
 

@@ -63,7 +63,20 @@ interface IDocument {
 
 		this.queryView = function(view, options){
 			options = options || {};
+			options.include_docs = true;
 			return self.Pouch.query(view, options);
+		}
+
+		this.queryViewOne = function(view , options){
+			options.limit = 1;
+			options.include_docs = true;
+			return self.queryView(view, options)
+				.then(function(results){
+					if(results.total_rows > 0){
+						return results.rows[0].doc;
+					} else 
+						return null;
+				})
 		}
 
 		this.mapRedios = function(mapredios){
@@ -108,10 +121,10 @@ interface IDocument {
 				)
 		}
 
-		this.sync = function(syncable_node, remote_options) {
+		this.sync = function(url, remote_options) {
 			var defer = Promise.defer();
-			
-			var remote = new PouchDB(syncable_node.url, remote_options);
+
+			var remote = new PouchDB(url, remote_options);
 
 			this.Pouch.sync(remote)
 				.on("complete", function(){
@@ -348,6 +361,10 @@ and adjust program behavior to them.
 			proto.name = name;
 			proto.crypted_credentials = null;
 			proto.url = null;
+			proto.use_credentials = false;
+			proto.protocol = "http";
+			proto.server_path = null;
+			proto.sync_syncable_nodes = false;
 			proto.is_live = false;
 			proto.last_time_sinced = null;
 			proto.last_time_failed_msg = null;
@@ -570,7 +587,8 @@ and adjust program behavior to them.
 .service("workshop.PouchDBTest.services.SyncableNodeService", 
 [
 	"workshop.PouchDBTest.services.DBService",
-	function(DBService){
+	"workshop.PouchDBTest.services.SyncableNodeFactory",
+	function(DBService, SyncableNodeFactory){
 		var self = this;
 
 		// PUBLIC
@@ -608,11 +626,45 @@ and adjust program behavior to them.
 			return DBService.save(syncable_node);
 		}
 
-		this.get = function(_id){
-			return DBService.get(_id).then(function(doc){
-				Unlock(doc);
+		this.getByName = function(name){
+			return DBService.queryViewOne("syncable_node_views/by_name", {key: name})
+			.then(function(doc){
+				if(doc)
+					Unlock(doc);
 				return doc;
 			})
+			;
+		}
+
+		this.get = function(_id) {
+			return DBService.get(_id)
+				.then(function(doc){
+					Unlock(doc);
+					return doc;
+				})
+				;
+		}
+
+		this.getUrl = function(syncable_node){
+			if(syncable_node.use_credentials){
+				return syncable_node.protocol + "://" + syncable_node.user + ":" + 
+					syncable_node.password + "@" + syncable_node.server_path;
+
+			} else return syncable_node.url;
+		}
+
+		this.sync = function(syncable_node, remote_options){
+			var url = self.getUrl(syncable_node);
+
+			return DBService.sync(url, remote_options)
+			.then(function(){
+				syncable_node.last_time_sinced = new Date();
+			})
+			.catch(function(error){
+				proto.last_time_failed_msg = new Date();
+				proto.sync_log.push(error.toString());
+			})
+			;
 		}
 
 		// END: PUBLIC
@@ -633,6 +685,26 @@ and adjust program behavior to them.
 		function SetPin(p){pin = p + "$$$233422$$$";}
 
 		// END: PRIVATE
+
+		/** VIEWS & INDICES **/
+		this.views = {};
+		this.views.by_name = {
+			_id: "_design/syncable_node_views",
+			views: {
+				by_name: {
+					map: function(doc){
+						if(doc.type == "$$1")
+							emit(doc.name);
+					}.toString()
+						.replace("$$1", SyncableNodeFactory.type)
+				}
+			}
+		};
+		/** END: VIEWS & INDICES **/
+
+		/** init **/
+		DBService.checkDBViews(this.views);
+		/** END: init **/
 	}
 ])
 

@@ -56,4 +56,32 @@ describe("SyncableNodeService unit test", function(){
 		
 	})
 
+	it("searches by name", function(done){
+		var name = "cloudant";
+
+		var s = SyncableNodeFactory._new();
+		s.name = name;
+		s.user = "user";
+		s.password = "password";
+		var id = s._id;
+
+		var pin = "1234";
+		
+		SyncableNodeService.setPin(pin);
+
+		SyncableNodeService.save(s)
+		.then(function(){
+			return SyncableNodeService.getByName(name);
+		})
+		.then(function(doc){
+			expect(doc._id).toBe(id);
+		})
+		.then(done)
+		.catch(function(err){
+			done.fail(err);
+		})
+		;
+
+	})
+
 })
