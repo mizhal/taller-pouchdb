@@ -25,7 +25,7 @@ interface IDocument {
 	function($q){
 		var self = this;
 
-		this.dbname = "test";
+		this.dbname = "test2";
 
 		/** SORTING PROTOCOL **/
 		this.sort_criteria = {
@@ -59,6 +59,10 @@ interface IDocument {
 
 		this.get = function(_id){
 			return self.Pouch.get(_id, {attachments: true});
+		}
+
+		this.all = function(options){
+			return self.Pouch.allDocs(options);
 		}
 
 		this.queryView = function(view, options){
@@ -121,31 +125,67 @@ interface IDocument {
 				)
 		}
 
+		this.reset = function(){
+			return self.Pouch.destroy()
+			.then(function() {
+				self.Pouch = new PouchDB(self.dbname);
+				return self.recreateViews();
+			})
+		}
+
+		// TODO: #0a369ad2-4ccd-11e6-8a74-0800278fc2ad document remote_options usage for one way replication
 		this.sync = function(url, remote_options) {
 			var defer = Promise.defer();
 
 			var remote = new PouchDB(url, remote_options);
 
-			this.Pouch.sync(remote)
-				.on("complete", function(){
-					defer.resolve();
-				})
-				.on("error", function(error){
-					defer.reject(error);
-				});
+			var action = null
+			if(remote_options.replicate_to) {
+				action = this.Pouch.replicate.to;
+			} else if(remote_options.replicate_from) {
+				action = this.Pouch.replicate.from;
+			} else {
+				action = this.Pouch.sync;
+			}
+
+			action(remote, {retry: true})
+			.on("complete", function(){
+				defer.resolve();
+			})
+			.on("error", function(error){
+				defer.reject(error);
+			})
+			;
 
 			return defer.promise;
 		}
 
+
+		var registered_views = {};
+		function SaveView(view){
+			registered_views[view._id] = view;
+		}
+		function RegisteredViews(){
+			return registered_views;
+		}
+
 		this.checkDBViews = function(views){
-			for(var i in views){
+			for(var i in views)
+				SaveView(views[i]);
+			self.recreateViews();
+		}
+
+		this.recreateViews = function(){
+			var views = RegisteredViews();
+			for(var i in views) {
 				self.save(views[i])
 					.catch(function(error){
 						if(error.name != "conflict")
 						{
 							console.log(error);
 						} // else: conflict means view already exists
-					});
+					})
+					;
 			}
 		}
 	}
@@ -364,7 +404,6 @@ and adjust program behavior to them.
 			proto.use_credentials = false;
 			proto.protocol = "http";
 			proto.server_path = null;
-			proto.sync_syncable_nodes = false;
 			proto.is_live = false;
 			proto.last_time_sinced = null;
 			proto.last_time_failed_msg = null;

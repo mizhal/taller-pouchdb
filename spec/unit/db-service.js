@@ -19,7 +19,7 @@ describe("DBService unit test", function(){
 				SyncableNodeFactory = _SyncableNodeFactory;
 				expect(SyncableNodeFactory).not.toBeUndefined();
 
-				DBService.clear()
+				DBService.reset()
 					.catch(function(error){
 						console.log("ERROR CLEARING DB " + error);
 						expect(error).toBeUndefined();
@@ -45,28 +45,4 @@ describe("DBService unit test", function(){
 			})
 		;
 	})
-
-	it("syncs with Cloudant", function(done){
-		var url = "http://www.alvi.com:3000/db/patcharan";
-
-		DBService.sync(url, {ajax: {withCredentials: false}})
-		.then(function(){ // import credentials from credentials database
-			return SyncableNodeService.get({name: "cloudant"})
-		})
-		.then(function(cloudant){
-			return SyncableNodeService.sync(cloudant, {ajax: {withCredentials: false}})	
-		})
-		.then(function(){
-			return DBService.get("cloudant-test-x");
-		})
-		.then(function(doc){
-			expect(doc.check).toBe("pandemonium");
-			done();
-		})
-		.catch(function(err){
-			done.fail(err);
-		})
-		;
-	})
-
 })

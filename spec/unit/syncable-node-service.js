@@ -1,3 +1,5 @@
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
+
 describe("SyncableNodeService unit test", function(){
 
 	beforeEach(module("workshop.PouchDBTest.services"));
@@ -19,7 +21,7 @@ describe("SyncableNodeService unit test", function(){
 				SyncableNodeFactory = _SyncableNodeFactory;
 				expect(SyncableNodeFactory).not.toBeUndefined();
 
-				DBService.clear()
+				DBService.reset()
 					.catch(function(error){
 						console.log("ERROR CLEARING DB " + error);
 						expect(error).toBeUndefined();
@@ -66,7 +68,7 @@ describe("SyncableNodeService unit test", function(){
 		var id = s._id;
 
 		var pin = "1234";
-		
+
 		SyncableNodeService.setPin(pin);
 
 		SyncableNodeService.save(s)
@@ -82,6 +84,31 @@ describe("SyncableNodeService unit test", function(){
 		})
 		;
 
+	})
+
+	it("syncs with Cloudant", function(done){
+
+		var url = "http://192.168.6.1:8000/db/test";
+
+		DBService.sync(url, {replicate_from: true, live:true, ajax: {withCredentials: false}})
+		.then(function(){ // import credentials from credentials database
+			return SyncableNodeService.getByName("cloudant");
+		})
+		.then(function(cloudant){
+			expect(cloudant).not.toBe(null, "Cloudant syncable not found");
+			return SyncableNodeService.sync(cloudant, {ajax: {withCredentials: false}})	
+		})
+		.then(function(){
+			return DBService.get("cloudant-test-x");
+		})
+		.then(function(doc){
+			expect(doc.check).toBe("pandemonium");
+			done();
+		})
+		.catch(function(err){
+			done.fail(err);
+		})
+		;
 	})
 
 })
