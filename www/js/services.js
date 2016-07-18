@@ -137,6 +137,8 @@ interface IDocument {
 		this.sync = function(url, remote_options) {
 			var defer = Promise.defer();
 
+			remote_options = remote_options || {};
+
 			var remote = new PouchDB(url, remote_options);
 
 			var action = null
@@ -694,7 +696,6 @@ and adjust program behavior to them.
 
 		this.sync = function(syncable_node, remote_options){
 			var url = self.getUrl(syncable_node);
-
 			return DBService.sync(url, remote_options)
 			.then(function(){
 				syncable_node.last_time_sinced = new Date();

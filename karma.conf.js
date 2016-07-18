@@ -17,7 +17,7 @@ module.exports = function(config) {
 	    	'./spec/unit/**/*.js'
 	    	// END: TESTS
 	    ],
-		browsers: ['PhantomJS'],
+		browsers: ['PhantomJS', 'Chrome'],
 		singleRun: true
 	  }
   );

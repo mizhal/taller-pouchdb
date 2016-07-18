@@ -1,4 +1,4 @@
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000000;
 
 describe("SyncableNodeService unit test", function(){
 
@@ -7,6 +7,7 @@ describe("SyncableNodeService unit test", function(){
 	var SyncableNodeService = null;
 	var DBService = null;
 	var SyncableNodeFactory = null;
+	var $http = null;
 
 	beforeEach(function(done){
 		inject([
@@ -87,26 +88,32 @@ describe("SyncableNodeService unit test", function(){
 	})
 
 	it("syncs with Cloudant", function(done){
-
+		// credentials loaded from this remote database
 		var url = "http://192.168.6.1:8000/db/test";
 
 		DBService.sync(url, {replicate_from: true, live:true, ajax: {withCredentials: false}})
-		.then(function(){ // import credentials from credentials database
+		.then(function(){
+			return DBService.get("test-pin");
+		})
+		.then(function(test_pin){ // import credentials from credentials database
+			expect(test_pin.pin).not.toBeUndefined();
+			SyncableNodeService.setPin(test_pin.pin);
 			return SyncableNodeService.getByName("cloudant");
 		})
 		.then(function(cloudant){
 			expect(cloudant).not.toBe(null, "Cloudant syncable not found");
-			return SyncableNodeService.sync(cloudant, {ajax: {withCredentials: false}})	
+			console.log("start sync...");
+			return SyncableNodeService.sync(cloudant)	
 		})
 		.then(function(){
 			return DBService.get("cloudant-test-x");
 		})
 		.then(function(doc){
-			expect(doc.check).toBe("pandemonium");
+			expect(doc.check).toBe("pandemonium-in-the-cloud");
 			done();
 		})
 		.catch(function(err){
-			done.fail(err);
+		 	done.fail(err);
 		})
 		;
 	})
