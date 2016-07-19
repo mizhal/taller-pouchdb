@@ -22,12 +22,17 @@ describe("SyncableNodeService unit test", function(){
 				SyncableNodeFactory = _SyncableNodeFactory;
 				expect(SyncableNodeFactory).not.toBeUndefined();
 
-				DBService.reset()
-					.catch(function(error){
-						console.log("ERROR CLEARING DB " + error);
-						expect(error).toBeUndefined();
-					})
-					.finally(done)
+				localStorage.clear();
+
+				DBService.connect("test")
+				.then(function(){
+					return DBService.clear();	
+				})
+				.catch(function(error){
+					console.log("ERROR CLEARING DB " + error);
+					expect(error).toBeUndefined();
+				})
+				.finally(done)
 			}
 		])
 	})

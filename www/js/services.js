@@ -25,8 +25,6 @@ interface IDocument {
 	function($q){
 		var self = this;
 
-		this.dbname = "test2";
-
 		/** SORTING PROTOCOL **/
 		this.sort_criteria = {
 			DATE_DESC: "DATE_DESC",
@@ -46,7 +44,13 @@ interface IDocument {
 		}
 		/** END: SORTING PROTOCOL **/
 
-		this.Pouch = new PouchDB(this.dbname); // size limits ignored as of now for sanity sake
+		this.Pouch = null;
+		this.dbname = null;
+		this.connect = function(dbname){
+			self.dbname = dbname;
+			self.Pouch = new PouchDB(self.dbname)
+			return self.recreateViews();
+		}
 
 		this.save = function(object /* :IDocument */) {
 			object.updated_at = new Date();
@@ -180,6 +184,9 @@ interface IDocument {
 		}
 
 		this.recreateViews = function(){
+			if(!self.Pouch)
+				return;
+
 			var views = RegisteredViews();
 			var promises = []
 			for(var i in views) {

@@ -18,7 +18,9 @@ module.exports = function(config) {
 	    	// END: TESTS
 	    ],
 		browsers: ['PhantomJS', 'Chrome'],
-		singleRun: true
+		singleRun: true,
+		browserNoActivityTimeout: 10000,
+		browserDisconnectTimeout: 10000
 	  }
   );
 };

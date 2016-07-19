@@ -16,12 +16,17 @@ describe("QuestService unit test", function(){
 				QuestFactory = _QuestFactory_;
 				DBService = _DBService_;
 
-				DBService.clear()
-					.catch(function(error){
-						console.log("ERROR CLEARING DB " + error);
-						expect(error).toBeUndefined();
-					})
-					.finally(done)
+				localStorage.clear();
+
+				DBService.connect("test")
+				.then(function(){
+					return DBService.clear();	
+				})
+				.catch(function(error){
+					console.log("ERROR CLEARING DB " + error);
+					expect(error).toBeUndefined();
+				})
+				.finally(done)
 
 			}
 		])
