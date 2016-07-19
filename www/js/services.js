@@ -135,7 +135,6 @@ interface IDocument {
 
 		// TODO: #0a369ad2-4ccd-11e6-8a74-0800278fc2ad document remote_options usage for one way replication
 		this.sync = function(url, remote_options) {
-			var defer = Promise.defer();
 
 			remote_options = remote_options || {};
 
@@ -150,16 +149,19 @@ interface IDocument {
 				action = this.Pouch.sync;
 			}
 
-			action(remote, {retry: true})
-			.on("complete", function(){
-				defer.resolve();
-			})
-			.on("error", function(error){
-				defer.reject(error);
+			return new Promise(function(resolve, reject) {
+
+				action(remote, {retry: true})
+				.on("complete", function(){
+					resolve();
+				})
+				.on("error", function(error){
+					reject(error);
+				})
+				;
+
 			})
 			;
-
-			return defer.promise;
 		}
 
 
@@ -179,8 +181,9 @@ interface IDocument {
 
 		this.recreateViews = function(){
 			var views = RegisteredViews();
+			var promises = []
 			for(var i in views) {
-				self.save(views[i])
+				var promise = self.save(views[i])
 					.catch(function(error){
 						if(error.name != "conflict")
 						{
@@ -188,7 +191,10 @@ interface IDocument {
 						} // else: conflict means view already exists
 					})
 					;
+				promises.push(promise);
 			}
+
+			return Promise.all(promises);
 		}
 	}
 ])
