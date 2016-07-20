@@ -92,7 +92,7 @@ describe("SyncableNodeService unit test", function(){
 
 	})
 
-	it("syncs with Cloudant", function(done){
+	xit("syncs with Cloudant", function(done){
 		// credentials loaded from this remote database
 		var url = "http://192.168.6.1:8000/db/test";
 
