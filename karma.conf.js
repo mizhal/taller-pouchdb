@@ -17,10 +17,10 @@ module.exports = function(config) {
 	    	'./spec/unit/**/*.js'
 	    	// END: TESTS
 	    ],
-		browsers: ['PhantomJS', 'Chrome'],
+		browsers: ['PhantomJS', 'Chrome', 'Firefox'],
 		singleRun: true,
-		browserNoActivityTimeout: 10000,
-		browserDisconnectTimeout: 10000
+		browserNoActivityTimeout: 30000,
+		browserDisconnectTimeout: 30000
 	  }
   );
 };
