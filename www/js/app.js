@@ -13,6 +13,13 @@ var app = angular.module("workshop.PouchDBTest", [
 	// END: app
 ])
 
+.run([
+	"workshop.PouchDBTest.services.DBService",
+	function(DBService){
+		DBService.connect("username@gmail.com");
+	}
+])
+
 /** ROUTES **/
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -21,12 +28,22 @@ var app = angular.module("workshop.PouchDBTest", [
 	.state("app", {
 		url: "/app",
 		abstract: true,
-		templateUrl: "templates/master-detail.html",
-		controller: "workshop.PouchDBTest.controllers.MainController"
+		templateUrl: "templates/tabs.html",
 	})
 
-	.state("app.quests", {
-		url: "/quests",
+	.state("app.quest", {
+		url: "/quest",
+		abstract: true,
+		views: {
+			"main-page": {
+				templateUrl: "templates/master-detail.html",
+				controller: "workshop.PouchDBTest.controllers.MainController"
+			}
+		}
+	})
+
+	.state("app.quest.list", {
+		url: "/list",
 		views: {
 			"list": {
 				templateUrl: "templates/list.html",
@@ -51,8 +68,8 @@ var app = angular.module("workshop.PouchDBTest", [
 		}
 	})	
 
-	.state("app.quest", {
-		url: "/quest/{id}",
+	.state("app.quest.detail", {
+		url: "/{id}",
 		views: {
 			"list": {
 				templateUrl: "templates/list.html",
@@ -67,8 +84,8 @@ var app = angular.module("workshop.PouchDBTest", [
 		},
 	})
 
-	.state("app.quest-edit", {
-		url: "/quest/edit/{id}",
+	.state("app.quest.edit", {
+		url: "/edit/{id}",
 		views: {
 			"list": {
 				templateUrl: "templates/list.html",
@@ -85,7 +102,7 @@ var app = angular.module("workshop.PouchDBTest", [
 	
 	;
 
-	$urlRouterProvider.otherwise("/app/quests");
+	$urlRouterProvider.otherwise("/app/quest/list");
 })
 /** END: ROUTES **/
 ;

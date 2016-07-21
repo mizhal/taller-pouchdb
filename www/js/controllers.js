@@ -10,7 +10,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 
 		// methods
 		$scope.create = function(){
-			$state.go("app.quest-edit");
+			$state.go("app.quest.edit");
 		};
 
 		$scope.updateQuests = function(){
@@ -62,7 +62,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 			QuestService.save($scope.quest)
 				.then(function(doc){
 					$rootScope.$broadcast("update-quests");
-					$state.go("app.quest", {id: doc.id});
+					$state.go("app.quest.detail", {id: doc.id});
 				})
 			;
 			
@@ -93,7 +93,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 					$scope.$apply();
 				})
 				.catch(function(error){
-					$state.go("app.quests");
+					$state.go("app.quest.list");
 				});
 		}
 
@@ -105,7 +105,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 			QuestService.destroy($scope.quest.data)
 				.then(function(){
 					$rootScope.$broadcast("update-quests");
-					$state.go("app.quests");		
+					$state.go("app.quest.list");		
 				});
 		}
 		// END: methods
