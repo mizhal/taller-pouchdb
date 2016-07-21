@@ -87,7 +87,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 				.then(function(doc){
 					if (!doc) {
 						console.log("Error recovering document: " + id);
-						$state.go("app.quests");
+						$state.go("app.quest.list");
 					}
 					$scope.quest = new QuestViewModel(doc, doc.journal);
 					$scope.$apply();
@@ -98,7 +98,7 @@ angular.module("workshop.PouchDBTest.controllers", [])
 		}
 
 		$scope.edit = function() {
-			$state.go("app.quest-edit", {id: $scope.quest.data._id});
+			$state.go("app.quest.edit", {id: $scope.quest.data._id});
 		};
 
 		$scope.delete = function() {

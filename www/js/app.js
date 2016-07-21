@@ -56,7 +56,7 @@ var app = angular.module("workshop.PouchDBTest", [
 						QuestService.getFirstId()
 							.then(function(id){
 								if(id)
-									$state.go("app.quest", {id: id});
+									$state.go("app.quest.detail", {id: id});
 							});
 					}
 				]
