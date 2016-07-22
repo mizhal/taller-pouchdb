@@ -638,6 +638,48 @@ and adjust program behavior to them.
 	}
 ])
 
+.service("workshop.PouchDBTest.services.JournalService"[
+	"workshop.PouchDBTest.services.JournalEntryFactory",
+	"workshop.PouchDBTest.services.DBService",
+	function(JournalEntryFactory, DBService){
+		var self = this;
+
+		// PUBLIC 
+		this.all = function(offset, limit){
+
+		}
+
+		this.getLastDays = function(now, n_days){
+
+		}
+
+		this.getByDay = function(day){
+
+		}
+
+		this.getEntryByShortID = function(){
+
+		}
+
+		this.save = function(entry_data){
+
+		}
+
+		this.get = function(id){
+
+		}
+
+		this.create = function(){
+
+		}
+		// END: PUBLIC
+
+		// PRIVATE
+
+		// END: PRIVATE
+	}
+])
+
 .service("workshop.PouchDBTest.services.SyncableNodeService", 
 [
 	"workshop.PouchDBTest.services.DBService",
