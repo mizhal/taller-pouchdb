@@ -638,7 +638,7 @@ and adjust program behavior to them.
 	}
 ])
 
-.service("workshop.PouchDBTest.services.JournalService"[
+.service("workshop.PouchDBTest.services.JournalService", [
 	"workshop.PouchDBTest.services.JournalEntryFactory",
 	"workshop.PouchDBTest.services.DBService",
 	function(JournalEntryFactory, DBService){
@@ -657,7 +657,7 @@ and adjust program behavior to them.
 
 		}
 
-		this.getEntryByShortID = function(){
+		this.getEntryByShortID = function(short_id){
 
 		}
 
@@ -677,6 +677,40 @@ and adjust program behavior to them.
 		// PRIVATE
 
 		// END: PRIVATE
+
+		// VIEWS & INDICES
+		this.views = {}
+		this.views.journal_entries = {
+			_id: "_design/journal_entries",
+			views: {
+				by_short_uuid: {
+					map: function(doc) {
+						if(doc.type == "$$1") {
+							emit(doc.shortUuid);
+						}
+					}.toString()
+						.replace("$$1", JournalEntryFactory.type)
+				},
+				by_date: {
+					map: function(doc) {
+						if(doc.type == "$$1") {
+							// format in lexicographic order
+							// so we can compare dates as strings
+							var date_lex = doc.created_at.getYear() + "-" + doc.created_at.getMonth() +
+								"-" + doc.created_at.getDate()
+								;
+							emit(date_lex);
+						}
+					}.toString()
+						.replace("$$1", JournalEntryFactory.type)
+				}
+			}
+		}
+		// END: VIEWS & INDICES
+
+		/** init **/
+		DBService.checkDBViews(this.views);
+		/** END: init **/
 	}
 ])
 

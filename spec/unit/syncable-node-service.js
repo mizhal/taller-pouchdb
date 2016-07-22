@@ -1,6 +1,6 @@
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000000;
 
-describe("SyncableNodeService unit test", function(){
+xdescribe("SyncableNodeService unit test", function(){
 
 	beforeEach(module("workshop.PouchDBTest.services"));
 
